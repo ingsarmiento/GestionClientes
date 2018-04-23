@@ -50,22 +50,22 @@ class Database extends mysqli{
 
     /**
      * Esta función devuelve los resultados de una consulta a una o más tablas. 
-     * @param string $tables nombre de la tabla o conjunto de nombres de las tablas a consultar.
-     * @param string $fields campo o conjunto de campos a consultar en la tabla, 
+     * @param $tables nombre de la tabla o conjunto de nombres de las tablas a consultar.
+     * @param $fields campo o conjunto de campos a consultar en la tabla, 
      * estos deben ir separados por (,) suvalor puede ser (*) si queremos consultar
      *  todos los campos de la tabla.
-     * @param string $conditions criterios de consulta a la tabla.
-     * @param string $orderBy campo o listado de campos por los que queremos ordenar
+     * @param $conditions criterios de consulta a la tabla.
+     * @param $orderBy campo o listado de campos por los que queremos ordenar
      *  el o los resultados de la consulta. 
      * @param int $limit parametro de tipo entero que nos permite decidir la cantidad de
      *  registros que queremos que se nos muestre.
      * @return $result un array que puede contener uno o mas registros.
      */
-    public function select(string $tables, string $fields, string $conditions, string $orderBy, int $limit) {
+    public function select($tables, $fields, $conditions, $orderBy, $limit) {
 
         $sql ='SELECT  '.$fields.' FROM '.$tables;
         $sql .= !empty($conditions)? ' WHERE '.$conditions : '';
-        $sql .= !empty($orderBy)? $orderBy : '';
+        $sql .= !empty($orderBy)? ' ORDER BY '. $orderBy : '';
         $sql .= $limit > 0? ' limit '+ $limit : '';
         $result = null;
         $result = $this->isConnectionSuccesfully()? $this->query($sql) : false;
