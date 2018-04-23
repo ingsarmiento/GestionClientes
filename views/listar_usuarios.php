@@ -11,7 +11,7 @@ include('libs/header.php');
             </div>
             <div class="card-body">
                 <fieldset id='fieldset_listar_usuarios' class="text-center">
-                    <form id='userFilterForm'>
+                    <form id='userFilterForm' action="user_management.php">
                         <div class="form-group row">
                             <label for="filtrarPor" class="col-sm-2 col-form-label">Filtrar</label>
                             <div class="col-sm-3">

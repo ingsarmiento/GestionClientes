@@ -3,13 +3,23 @@
     include('database.php');
     $db = new Database();
     $query = null;
-    $conditions = null;
+    $filter = $_REQUEST['filtro'];
     $order = $_REQUEST['order'];
     switch($_REQUEST['action']){
         case 'getUsers':
             if($_REQUEST['filter'] == "0"){
                 $query = $db->select("usuarios","*","",$order,0);
             }
+            if($_REQUEST['filter'] == "1"){
+                $query = $db->select("usuarios","*",' usuario = '."'".$filter."'",'',0);
+            }
+            if($_REQUEST['filter'] == "2"){
+                $query = $db->select("usuarios","*",' nombre = '."'".$filter."'",$order,0);
+            }
+            if($_REQUEST['filter'] == "3"){
+                $query = $db->select("usuarios","*",' apellido = '."'".$filter."'",$order,0);
+            }
+            
             if($query){
                 while($user = $query->fetch_object())
                 {
