@@ -1,5 +1,5 @@
     <?php
-    if(isset($_SESSION)){
+    /*if(isset($_SESSION)){
       $now = time();
       if($now = $_SESSION['expire'])
       {
@@ -7,8 +7,9 @@
         session_destroy();
         header("Localhost:http://localhost:3000/login");
       }
-    }
+    }*/
     ?>
+    
 <!doctype html>
 <html lang="en">
   <head>
@@ -56,7 +57,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">opciones de Usuario</a>
             <div class="dropdown-menu" aria-labelledby="dropdown03">
-              <a class="dropdown-item"><?php if(isset($_SESSION)) echo $_SESSION['nombre']; ?></a>
+              <a class="dropdown-item"><?php //if(isset($_SESSION)) echo $_SESSION['nombre']; ?></a>
               <a class="dropdown-item" role="divider"></a>
               <a class="dropdown-item" href="#">Cambiar contraseña</a>
               <a class="dropdown-item" href="../views/logout.php">Cerrar Sesión</a>

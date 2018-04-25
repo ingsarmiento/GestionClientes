@@ -1,112 +1,129 @@
 <?php
+    class Database {
     
-    include('config.php');
+        private $db;
+        private $table;
 
-//Esta clase define las operaciones sobre las base de datos
-class Database extends mysqli{
-
-    private static $instance = null;
-
-    //Connection Variables
-    private $host = DB_HOST;
-    private $username = USERNAME;
-    private $password = PASSWORD;
-    private $dbName = DB_NAME;
-
-    //This method must be static, and must return an instance of the object if the object
-    //does not already exist.
-    public static function getInstance() {
-        if (!self::$instance instanceof self) {
-                self::$instance = new self;
-        }
-            return self::$instance;
-    }
-
-    // The clone and wakeup methods prevents external instantiation of copies of the Singleton class,
-    // thus eliminating the possibility of duplicate objects.
-    public function __clone() {
-        trigger_error('Clone is not allowed.', E_USER_ERROR);
-    }
-    public function __wakeup() {
-        trigger_error('Deserializing is not allowed.', E_USER_ERROR);
-    }
-
-    public function __construct()
-    {
-        parent::__construct($this->host,$this->username,$this->password,$this->dbName);
-        if(mysqli_connect_error())
+        public function __construct($table)
         {
-            exit('Error de conexión: ('.mysqli_connect_errno.') '.mysqli_connect_error);
+            //$conf = require_once('../config/config.php');
+            $this->db = new mysqli('localhost','root','root','pruebadb');
+            $this->table = (string) $table;
         }
-        parent::set_charset('utf-8');
-    }
-
-    /*
-    * Esta función verifica si la conexión ha tenido éxito.
-    */
-    private function isConnectionSuccesfully(){
-        return !$this->connect_errno;
-    }
-
-    /**
-     * Esta función devuelve los resultados de una consulta a una o más tablas. 
-     * @param $tables nombre de la tabla o conjunto de nombres de las tablas a consultar.
-     * @param $fields campo o conjunto de campos a consultar en la tabla, 
-     * estos deben ir separados por (,) suvalor puede ser (*) si queremos consultar
-     *  todos los campos de la tabla.
-     * @param $conditions criterios de consulta a la tabla.
-     * @param $orderBy campo o listado de campos por los que queremos ordenar
-     *  el o los resultados de la consulta. 
-     * @param int $limit parametro de tipo entero que nos permite decidir la cantidad de
-     *  registros que queremos que se nos muestre.
-     * @return $result un array que puede contener uno o mas registros.
-     */
-    public function select($tables, $fields, $conditions, $orderBy, $limit) {
-
-        $sql ='SELECT  '.$fields.' FROM '.$tables;
-        $sql .= !empty($conditions)? ' WHERE '.$conditions : '';
-        $sql .= !empty($orderBy)? ' ORDER BY '. $orderBy : '';
-        $sql .= $limit > 0? ' limit '+ $limit : '';
-        $result = null;
-        $result = $this->isConnectionSuccesfully()? $this->query($sql) : false;
-        return $result;
-    }
-
-        /**
-         * Esta funcion ejecuta la insersión de un registro en una tabla.
-         * @param string $table nombre de la tabla en la cual queremos insertar nuestro registro.
-         * @param string $fields campo o conjunto de campos que queremos insertar en la tabla.
-         * @param $values valor o conjunto de valores que queremos guardar en los campos de la tabla.
-         * @param $result numero de filas insertadas.
-         */
-        public function insert(string $table, string $fields, string $values)
+    
+        public function isConnectionSuccess()
         {
-            $result = $this->isConnectionSuccesfully()? $this->query('INSERT INTO '.$table.'('.$fields.')'.'VALUES('.$values.')') : false;
-            $result ? $result->affected_rows(): 0;
+            if(!$this->db->connect_error){
+                return true;
+            }
+            return false;
         }
-
-        /**
-         * Esta función Actualiza un registro en la base de datos.
-         * @param string $table nombre de la tabla donde queremos actualizar nuestro registro.
-         * @param string $fieldsValues nombre del campo o nombres de conjunto de campos a actualizar
-         * con sus respectivos valores.
-         * @param int $id identificador del registro a actualizar.
-         * @return $result numero de filas afectadas que en nuestro caso solo debe ser 1. 
-         */
-        public function update(string $table, string $fileldsValues, int $id)
+    
+        public function findAll()
         {
-            $result = $this->isConnectionSuccesfully() ? $this->query('UPDATE table '.$table.' SET '.$fieldsValues.')'.'WHERE id = '.$id) : false;
-            return $result ? $result->affected_rows(): 0;
+            $resultset = null;
+            if($this->isConnectionSuccess())
+            {
+                $query =  $this->db->query('select * from '.$this->table.' order by id desc'); 
+                if($query)
+                {
+                   $resultset = $this->resultset($query);
+                }
+            }
+            return $resultset;
         }
 
-        /**
-         * Esta funcion borra un registro de una tabla.
-         * @param string $table nombre de la tabla de donde queremos borrar el registro.
-         * @param int $id identificador del registro a borrar;
-         */
-        public function delete(string $table, int $id){
-            $result = $this->isConnectionSuccesfully()? $this->query('DELETE FROM TABLE '.$table.' WHERE id='.$id): false;
-            return $result ? $result->affected_rows(): 0;
+        public function findAllOrdered($order)
+        {
+            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.'Order by '."'".$order."'") : false;
+            return $this->resultset($query);
         }
-}                                   
+        public function findById($id)
+        {
+            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.' where id='."'".$id."'") : false;
+            $result = $query? $query->fetch_object() : null;
+            return $result;
+        }
+    
+        public function findByCriteria($filter)
+        {
+            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.' where '.$filter) : false;
+            return $this->resultset($query);
+        }
+
+        public function findByCriteriaOrdered($filter, $order)
+        {
+            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.' where '.$filter.'order by $order') : false;
+            return $this->resultset($query);
+        }
+
+        public function findOne($filter)
+        {
+            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.' where '.$filter) : false;
+            $result = $query? $query->fetch_object() : null;
+            return $result;
+        }
+
+        public function insert($fields, $values)
+        {
+            $query = $this->isConnectionSuccess() ? $this->db->query('insert into '.$this->table.' ('.$fields.') values('.$values.')') : false;
+            //$num_rows = $query ? $query->insert_id : 0
+            return;
+        }
+    
+        public function update($fieldsAndValues, $id){
+            $query = $this->isConnectionSuccess() ? $this->db->query('update '.$this->table.' set '.$fieldsAndValues.' where id='."'".$id."'") : false;
+            return;
+        }
+    
+        public function delete($id){
+             $query = $this->isConnectionSuccess() ? $this->db->query('delete from '.$this->table.' where id='."'".$id."'") : false;
+             return;
+        }
+    
+        private function resultset($query)
+        {
+            $resultset[] = array();
+            if($query) {
+                while($row = $query->fetch_object()) 
+                {
+                    array_push($resultset,$row);
+                }
+            } 
+            return $resultset;
+        }
+
+        public function getValue($val)
+        {
+            $res = $this->getRow();
+            if($res != null)
+            {
+                return $res->$val;
+            }
+            else{
+                return null;
+            }
+        }
+
+        public function getRow()
+        {
+            $query = $this->isConnectionSuccess() ? $this->db->query('select * from usuarios where username="jsarmiento"') : false;
+            $row = null;
+            if($query){
+                $row = $query->fetch_object();
+            }
+            return $row;
+        }
+
+        public function getRows()
+        {
+
+            $query = $this->isConnectionSuccess() ? $this->db->query('select * from usuarios order by id desc') : false;
+            $result = [];
+            if($query){
+               $result = $query->fetch_all();
+            }
+            return $result;
+        }
+    }                                 
 ?>

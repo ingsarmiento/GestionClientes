@@ -1,32 +1,43 @@
 <?php
+require('../model/usuario.php');
 
-include('database.php');
-$email = $_POST['email'];
-$password = $_POST['password'];
-$db = new Database();
+//verificamos que la petición post contiene parametros.
+if(isset($_POST)){
+    //Recuperamos el email y la contraseña enviado en la peticion post.
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-//Cheking user
-$query = $db->select("usuarios","*","email='".$email."'","",0);
-if($query)
-{
-    $user = $query->fetch_object();
-    //Checking password.
-    if($user->password == $password)
-    {
-        session_start();
-        $_SESSION['loggedin'] = true;
+    //Modelo usuario
+    $userModel = new Usuario();
+
+    $users = $userModel->getRow();
+    //var_dump($users);
+    //var_dump($userModel->getValue("nombre"));
+    $users = $userModel->getRows();
+    //var_dump($users);
+
+    //Verificando si el usuario existe en la base de datos.
+    $user = $userModel->findOne('email="'.$email.'"');
+    //Verificando si el usuario introdujo la contraseña correcta.
+    //if($user != null && $password == $user->password){
+        //Iniciamos la Sesión.
+        //session_start();
+        //Establecemos los valores de la sesión con los que vamos a trabajar.
+        /*$_SESSION = array();
         $_SESSION['nombre'] = $user->nombre;
-        $_SESSION['start'] = time();
-        $_SESSION['expire'] = $_SESSION['start'] + (10*60);
-        header("Location:http://localhost:3000/");
-        
-    }
-    else
-    {
-       echo 'El usuario o la contraseña no son validos';
-    }
+        $_SESSION['loggedin'] = true;
+        $_SESSION['admin'] = $user->admin;
+        $_SESSION['start'] = time();*/
+        //$_SESSION['expire'] = ;
+        //Llamamos a nuestra pagina home.
+        //include('../views/home.php');
+        //var_dump($user);
+        //header('Location: http://localhost:8080');
+    //}else
+    //{
+       // echo 'El usuario o la contraseña no son validos';
+    //}
 }
-else{
-    echo 'Usuario no encontrado';    
-}
+
+
 ?>

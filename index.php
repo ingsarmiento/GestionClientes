@@ -18,12 +18,12 @@
             }*/
             break;
         case '/clientes':
-            if(isset($_SESSION) && $_SESSION['loggedin']){
+            //if(isset($_SESSION) && $_SESSION['loggedin']){
                 require 'views/listar_clientes.php';
-            }else
-            {
-                echo $accessDenied;
-            }
+            //}else
+            //{
+                //echo $accessDenied;
+            //}
             break;
             default:
                 header('HTTP/1.0 404 Not Found');

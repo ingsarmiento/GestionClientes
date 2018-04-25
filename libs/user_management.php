@@ -1,14 +1,24 @@
 <?php
-    session_start();
-    include('database.php');
-    $db = new Database();
-    $query = null;
-    $filter = $_REQUEST['filtro'];
-    $order = $_REQUEST['order'];
+    require('../model/usuario.php');
+    $userModel = new Usuario();
+    $filter = "";
+    if(isset($_REQUEST['filtro'])){
+        $filter = $_REQUEST['filtro'];
+    }
+    $order = "";
+    if(isset($_REQUEST['order'])){
+        $order = $_REQUEST['order'];
+    }
     switch($_REQUEST['action']){
         case 'getUsers':
             if($_REQUEST['filter'] == "0"){
-                $query = $db->select("usuarios","*","",$order,0);
+                $resultset = $userModel->findAllOrdered($order);
+                if($resultset != [])
+                {
+                    //var_dump($resultset);
+                    //echo ' exito ';
+                    //echo $userModel->getRows($resultset);
+                }
             }
             if($_REQUEST['filter'] == "1"){
                 $query = $db->select("usuarios","*",' usuario = '."'".$filter."'",'',0);
@@ -20,7 +30,7 @@
                 $query = $db->select("usuarios","*",' apellido = '."'".$filter."'",$order,0);
             }
             
-            if($query){
+            /*if($query){
                 while($user = $query->fetch_object())
                 {
                     echo '<tr>'
@@ -35,7 +45,7 @@
                             .'<td><i class="fas fa-trash-alt"><a href="libs/user_management.php?action=deleteUser&id="'.$user->id_usuario.'> </a></i></td>'.
                         '</tr>';
                 }
-            }
+            }*/
         break;
     }
 ?>
