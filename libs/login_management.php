@@ -10,14 +10,24 @@ if(isset($_POST)){
     //Modelo usuario
     $userModel = new Usuario();
 
-    $users = $userModel->getRow();
-    //var_dump($users);
+    //$user = $userModel->getRow();
+    //var_dump($user);
     //var_dump($userModel->getValue("nombre"));
-    $users = $userModel->getRows();
+    $users = $userModel->getRow('select * from usuarios where username=? and password=?',array('jsarmiento','123456'));
+    var_dump($users);
+
+    //$count = $userModel->getCount();
+
+    //echo $count;
+
+    /*foreach($users as $user)
+    {
+        echo $user["nombre"];
+    }*/
     //var_dump($users);
 
     //Verificando si el usuario existe en la base de datos.
-    $user = $userModel->findOne('email="'.$email.'"');
+   // $user = $userModel->findOne('email="'.$email.'"');
     //Verificando si el usuario introdujo la contraseña correcta.
     //if($user != null && $password == $user->password){
         //Iniciamos la Sesión.

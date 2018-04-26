@@ -3,10 +3,9 @@
     
         private $db;
         private $table;
-
+        private $resultset;
         public function __construct($table)
         {
-            //$conf = require_once('../config/config.php');
             $this->db = new mysqli('localhost','root','root','pruebadb');
             $this->table = (string) $table;
         }
@@ -18,112 +17,194 @@
             }
             return false;
         }
-    
-        public function findAll()
+
+        public function insert($sql, $params)
         {
-            $resultset = null;
             if($this->isConnectionSuccess())
             {
-                $query =  $this->db->query('select * from '.$this->table.' order by id desc'); 
+                $query = $this->db->prepare($sql);
+                foreach($params as $p)
+                {
+                    $query->bind_param($this->valueType($p),$p);
+                }
+                $query->execute();
                 if($query)
                 {
-                   $resultset = $this->resultset($query);
+                    return $query->affected_rows();
                 }
-            }
-            return $resultset;
-        }
-
-        public function findAllOrdered($order)
-        {
-            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.'Order by '."'".$order."'") : false;
-            return $this->resultset($query);
-        }
-        public function findById($id)
-        {
-            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.' where id='."'".$id."'") : false;
-            $result = $query? $query->fetch_object() : null;
-            return $result;
-        }
-    
-        public function findByCriteria($filter)
-        {
-            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.' where '.$filter) : false;
-            return $this->resultset($query);
-        }
-
-        public function findByCriteriaOrdered($filter, $order)
-        {
-            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.' where '.$filter.'order by $order') : false;
-            return $this->resultset($query);
-        }
-
-        public function findOne($filter)
-        {
-            $query = $this->isConnectionSuccess() ? $this->db->query('select * from '.$this->table.' where '.$filter) : false;
-            $result = $query? $query->fetch_object() : null;
-            return $result;
-        }
-
-        public function insert($fields, $values)
-        {
-            $query = $this->isConnectionSuccess() ? $this->db->query('insert into '.$this->table.' ('.$fields.') values('.$values.')') : false;
-            //$num_rows = $query ? $query->insert_id : 0
-            return;
-        }
-    
-        public function update($fieldsAndValues, $id){
-            $query = $this->isConnectionSuccess() ? $this->db->query('update '.$this->table.' set '.$fieldsAndValues.' where id='."'".$id."'") : false;
-            return;
-        }
-    
-        public function delete($id){
-             $query = $this->isConnectionSuccess() ? $this->db->query('delete from '.$this->table.' where id='."'".$id."'") : false;
-             return;
-        }
-    
-        private function resultset($query)
-        {
-            $resultset[] = array();
-            if($query) {
-                while($row = $query->fetch_object()) 
+                else
                 {
-                    array_push($resultset,$row);
+                    return 0;
                 }
-            } 
-            return $resultset;
-        }
-
-        public function getValue($val)
-        {
-            $res = $this->getRow();
-            if($res != null)
-            {
-                return $res->$val;
             }
-            else{
+            else
+           {
+                return null;
+           }
+        }
+    
+        public function update($sql, $params)
+        {
+            if($this->isConnectionSuccess())
+            {
+                $query = $this->db->prepare($sql);
+                foreach($params as $p)
+                {
+                    $query->bind_param($this->valueType($p),$p);
+                }
+                $query->execute();
+                if($query)
+                {
+                    return $query->affected_rows();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+           {
+                return null;
+           }
+        }
+    
+        public function delete($id)
+        {
+            if($this->isConnectionSuccess()){
+                $query = $this->db->prepare("delete from {$this->table} where id=?");
+                $query->bind_param('i',(int)$id);
+                $query->execute();
+                if($query){
+                    return (int) $query->affected_rows();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
                 return null;
             }
         }
 
-        public function getRow()
-        {
-            $query = $this->isConnectionSuccess() ? $this->db->query('select * from usuarios where username="jsarmiento"') : false;
+        public function getCount()
+        {  
             $row = null;
-            if($query){
-                $row = $query->fetch_object();
+            if($this->isConnectionSuccess()){
+                $query = $this->db->query("select count(*) c from {$this->table}");
+                if($query)
+                {
+                    $row = $query->fetch_assoc();
+                }
             }
-            return $row;
+            return (int)$row['c'];
         }
 
-        public function getRows()
+        public function getRow($sql, $params = '')
         {
-
-            $query = $this->isConnectionSuccess() ? $this->db->query('select * from usuarios order by id desc') : false;
-            $result = [];
-            if($query){
-               $result = $query->fetch_all();
+            if($this->isConnectionSuccess())
+            {
+                //Esta variable almacena los resultados obtenidos.
+                $result = [];
+                $query = $this->db->stmt_init();
+                if($query->prepare($sql))
+                {
+                    //Verificamos que se haya introducido algun criterio de selección;
+                    if($params != '')
+                    {
+                        //Si pasamos un conjunto de valores se recorre el array y se enlaza cada parametro con la consulta. 
+                        if(is_array($params)){
+                            $s = '';
+                            foreach($params as $p){
+                                $s .= $this->valueType($p);
+                            }
+                            echo $s;
+                            $query->bind_params($s, $p); //Revisar este apartado
+                        }//Si se trata de un solo valor se enlaza dicho parametro.
+                        else
+                        {
+                             $query->bind_param($this->valueType($params),$params);
+                        }
+                    }
+                     $query->execute(); 
+                     $res = $query->get_result();
+                     $result = $res->fetch_assoc();
+                }
+                return $result;
             }
-            return $result;
+            else
+            {
+                return null;
+            }
+        }
+
+        public function getRows($sql, $params = '')
+        {
+            if($this->isConnectionSuccess())
+            {
+                //Esta variable almacena los resultados obtenidos.
+                $result = [];
+                $query = $this->db->stmt_init();
+                if($query->prepare($sql))
+                {
+                    //Verificamos que se haya introducido algun criterio de selección;
+                    if($params != '')
+                    {
+                        //Si pasamos un conjunto de valores se recorre el array y se enlaza cada parametro con la consulta. 
+                        if(is_array($params)){
+                            foreach($params as $p){
+                                $query->bind_param($this->valueType($p),$p);
+                            }
+                        }//Si se trata de un solo valor se enlaza dicho parametro.
+                        else
+                        {
+                             $query->bind_param($this->valueType($params),$params);
+                        }
+                    }
+                     $query->execute(); 
+                     $res = $query->get_result();
+                     while($row = $res->fetch_assoc()){
+                        array_push($result, $row);
+                     }
+                }
+                return $result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private function valueType($value)
+        {
+            $result = gettype($value);
+            switch($result){
+                case 'string':
+                    return 's';
+                    break;
+                case 'integer':
+                    return 'i';
+                    break;
+                case 'double':
+                    return 'd';
+                    break;
+                case 'object':
+                    return 'o';
+                    break;
+                case 'boolean':
+                    return 'b';
+                    break;
+                case 'null':
+                    return 'n';
+                    break;
+                case 'array':
+                    return 'a';
+                    break;
+                case 'resource':
+                    return 'r';
+                    break;
+            }
         }
     }                                 
 ?>
