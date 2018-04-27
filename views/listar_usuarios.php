@@ -61,7 +61,8 @@ include('libs/header.php');
                         <th scope='col'> NOMBRE</th>
                         <th scope='col'> APELLIDO</th>
                         <th scope='col'> DIRECCIÓN</th>
-                        <th scope='col'> TÉLEFONO </th>
+                        <th scope='col'> TÉLEFONO </th> 
+                        <th scope='col'> EMAIL </th>
                         <th scope='col'> USUARIO </th>
                         <th scope='col'> FECHA DE ALTA</th>
                         <th scope='col'> </th>

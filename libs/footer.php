@@ -12,18 +12,56 @@
     <script src="../assets/js/bootstrap.min.js"></script>
 
     <script>
-      $('#userFilterForm').submit(function(e){
+    
+    $('#userFilterForm').submit(function(e)
+    {
         e.preventDefault();
+        return false;
     });
-
+    
+    var tBody = $("#tbody");
     //evento click del boton listar.
-    $("#btnListar").click(function(){
+    $("#btnListar").click(function()
+    {
       $.post('libs/user_management.php?action=getUsers&filter='+$('#filtrarPor option:selected').val()
       +'&order='+$('#ordenarPor option:selected').val(),
       function(response){
-        $("#tbody").html(response);
+        showColumns(response);
       });
     });
+
+    function showColumns(data)
+    {
+        console.log(data);
+        var users = JSON.parse(data);
+        if(users.length > 1)
+        {
+          users.forEach(function(element)
+          {
+            showColumn(element);
+          });
+        }
+        else if(users.length == 1)
+        {
+          showColumn(users);
+        }        
+    }
+    function showColumn(element)
+    {
+      tBody.append('<tr>');
+      tBody.append('<td>'+element.nombre+'</td>');
+      tBody.append('<td>'+element.apellido+'</td>');
+      tBody.append('<td>'+element.direccion+'</td>');
+      tBody.append('<td>'+element.telefono+'</td>');
+      tBody.append('<td>'+element.email+'</td>');
+      tBody.append('<td>'+element.username+'</td>');
+      tBody.append('<td>'+element.created_at+'</td>');
+      tBody.append('<td><a href="libs/user_management.php?action=getUser&id='+element.id+'">Detalle</a></td>');
+      tBody.append('<td><a href="libs/user_management.php?action=updateUser&id='+element.id+'">Modificar</a></td>');
+      tBody.append('<td><a href="libs/user_management.php?action=deleteUsers&id='+element.id+'">Eliminar</a></td>');
+      tBody.append('</tr><a></a>');
+    }
+
 
     </script>
   </body>

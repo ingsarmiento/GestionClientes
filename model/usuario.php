@@ -44,29 +44,5 @@ class Usuario extends Database
     {
         return $this->delete($id);
     }
-
-    /*public function getRows($sql, $params = ''){
-        
-        $resultset = $this->getRows($sql, $params); 
-
-        $rows = "";
-        if($resultset != []){
-            foreach($resultset as $user){
-                $rows .= '<tr>'
-                .'<td>'. $user['nombre'] .'</td>'
-                .'<td>'. $user['apellido'] .'</td>'
-                .'<td>'. $user['direccion'] .'</td>'
-                .'<td>'. $user['telefono'] .'</td>'
-                .'<td>'. $user['username'] .'</td>'
-                .'<td>'. $user['created_at'] .'</td>'
-                .'<td><a href="libs/user_management.php?action=getUserDetails&id="'.$user->id.'> Detalles </a></td>'
-                .'<td><a href="libs/user_management.php?action=editUser&id="'.$user->id.'> </a>Modificar</td>'
-                .'<td><a href="libs/user_management.php?action=deleteUser&id="'.$user->id.'> </a>Borrar</td>'.
-            '</tr>';
-            }
-        }
-        return $rows;
-    }*/
-
 }
 ?>

@@ -3,10 +3,11 @@
     
         private $db;
         private $table;
-        private $resultset;
+
         public function __construct($table)
         {
             $this->db = new mysqli('localhost','root','root','pruebadb');
+            mysqli_set_charset($this->db,"utf8");
             $this->table = (string) $table;
         }
     
@@ -23,10 +24,7 @@
             if($this->isConnectionSuccess())
             {
                 $query = $this->db->prepare($sql);
-                foreach($params as $p)
-                {
-                    $query->bind_param($this->valueType($p),$p);
-                }
+                call_user_func_array(array($query, 'bind_param'), $this->bindParameters($params));
                 $query->execute();
                 if($query)
                 {
@@ -48,10 +46,7 @@
             if($this->isConnectionSuccess())
             {
                 $query = $this->db->prepare($sql);
-                foreach($params as $p)
-                {
-                    $query->bind_param($this->valueType($p),$p);
-                }
+                call_user_func_array(array($query, 'bind_param'), $this->bindParameters($params));
                 $query->execute();
                 if($query)
                 {
@@ -72,7 +67,7 @@
         {
             if($this->isConnectionSuccess()){
                 $query = $this->db->prepare("delete from {$this->table} where id=?");
-                $query->bind_param('i',(int)$id);
+                $query->bind_param('i',$id);
                 $query->execute();
                 if($query){
                     return (int) $query->affected_rows();
@@ -115,12 +110,7 @@
                     {
                         //Si pasamos un conjunto de valores se recorre el array y se enlaza cada parametro con la consulta. 
                         if(is_array($params)){
-                            $s = '';
-                            foreach($params as $p){
-                                $s .= $this->valueType($p);
-                            }
-                            echo $s;
-                            $query->bind_params($s, $p); //Revisar este apartado
+                            call_user_func_array(array($query, 'bind_param'), $this->bindParameters($params));
                         }//Si se trata de un solo valor se enlaza dicho parametro.
                         else
                         {
@@ -129,9 +119,11 @@
                     }
                      $query->execute(); 
                      $res = $query->get_result();
-                     $result = $res->fetch_assoc();
+                     while($row = $res->fetch_assoc()){
+                        array_push($result, $row);
+                     }
                 }
-                return $result;
+                return json_encode($result,JSON_UNESCAPED_UNICODE);
             }
             else
             {
@@ -153,9 +145,7 @@
                     {
                         //Si pasamos un conjunto de valores se recorre el array y se enlaza cada parametro con la consulta. 
                         if(is_array($params)){
-                            foreach($params as $p){
-                                $query->bind_param($this->valueType($p),$p);
-                            }
+                            call_user_func_array(array($query, 'bind_param'), $this->bindParameters($params));
                         }//Si se trata de un solo valor se enlaza dicho parametro.
                         else
                         {
@@ -168,7 +158,7 @@
                         array_push($result, $row);
                      }
                 }
-                return $result;
+                return json_encode($result,JSON_UNESCAPED_UNICODE);
             }
             else
             {
@@ -205,6 +195,23 @@
                     return 'r';
                     break;
             }
+        }
+
+        private function bindParameters($params)
+        {
+            $s = '';
+            $a_params = array();
+            $n = count($params);
+            foreach($params as $p){
+                $s .= $this->valueType($p);
+            }
+                            
+            $a_params[] = & $s;
+            for($i = 0; $i < $n; $i++ ){
+                $a_params[] = & $params[$i];
+            }
+
+            return $a_params;
         }
     }                                 
 ?>

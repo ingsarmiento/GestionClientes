@@ -1,51 +1,85 @@
 <?php
     require('../model/usuario.php');
+
     $userModel = new Usuario();
     $filter = "";
-    if(isset($_REQUEST['filtro'])){
-        $filter = $_REQUEST['filtro'];
+
+    if(isset($_POST['filtro'])){
+        $filter = $_POST['filtro'];
     }
     $order = "";
-    if(isset($_REQUEST['order'])){
-        $order = $_REQUEST['order'];
+    if(isset($_POST['order'])){
+        $order = $_POST['order'];
     }
+
     switch($_REQUEST['action']){
+        
         case 'getUsers':
-            if($_REQUEST['filter'] == "0"){
-                $resultset = $userModel->findAllOrdered($order);
-                if($resultset != [])
-                {
-                    //var_dump($resultset);
-                    //echo ' exito ';
-                    //echo $userModel->getRows($resultset);
-                }
+            $resultset = null;
+            if($_REQUEST['filter'] == "0")
+            {
+                $resultset = $userModel->getRows("Select * from usuarios order by {$order}");
             }
-            if($_REQUEST['filter'] == "1"){
-                $query = $db->select("usuarios","*",' usuario = '."'".$filter."'",'',0);
+            if($_REQUEST['filter'] == "1")
+            {
+                $resultset = $userModel->getRow("Select * from usuarios where username=?",$filter);
             }
-            if($_REQUEST['filter'] == "2"){
-                $query = $db->select("usuarios","*",' nombre = '."'".$filter."'",$order,0);
+            if($_REQUEST['filter'] == "2")
+            {
+                $resultset = $userModel->getRows("Select * from usuarios where nombre=? order by {$order}",$filter);
             }
-            if($_REQUEST['filter'] == "3"){
-                $query = $db->select("usuarios","*",' apellido = '."'".$filter."'",$order,0);
+            if($_REQUEST['filter'] == "3")
+            {
+                $resultset = $userModel->getRows("Select * from usuarios where apellido=? order by {$order}",$filter);
             }
             
-            /*if($query){
-                while($user = $query->fetch_object())
-                {
-                    echo '<tr>'
-                            .'<td>'. $user->nombre .'</td>'
-                            .'<td>'. $user->apellido .'</td>'
-                            .'<td>'. $user->direccion .'</td>'
-                            .'<td>'. $user->telefono .'</td>'
-                            .'<td>'. $user->username .'</td>'
-                            .'<td>'. $user->created_at .'</td>'
-                            .'<td><i class="fas fa-search"><a href="libs/user_management.php?action=getUserDetails&id="'.$user->id_usuario.'> </a></i></td>'
-                            .'<td><i class="fas fa-edit"><a href="libs/user_management.php?action=editUser&id="'.$user->id_usuario.'> </a></i></td>'
-                            .'<td><i class="fas fa-trash-alt"><a href="libs/user_management.php?action=deleteUser&id="'.$user->id_usuario.'> </a></i></td>'.
-                        '</tr>';
-                }
-            }*/
+            if($resultset != null)
+            {
+              echo $resultset;      
+            }
+
+        break;
+
+        case "saveUser":
+            if(isset($_POST)){
+                $userModel->username = $_POST["username"];
+                $userModel->password = $_POST["password"];
+                $userModel->nombre = $_POST["nombre"];
+                $userModel->apellido = $_POST["apellido"];
+                $userModel->direccion = $_POST["direccion"];
+                $userModel->telefono = $_POST["telefono"];
+                $userModel->username = $_POST["email"];
+                $userModel->username = $_POST["provincia"];
+                $userModel->username = $_POST["poblacion"];
+                $userModel->username = $_POST["codigo_postal"];
+                $userModel->username = $_POST["admin"];
+                $userModel->guardar();
+            }
+        break;
+
+        case "editUser":
+        if(isset($_POST))
+        {
+            $userModel->setId($_POST["id"]);
+            $userModel->username = $_POST["username"];
+            $userModel->password = $_POST["password"];
+            $userModel->nombre = $_POST["nombre"];
+            $userModel->apellido = $_POST["apellido"];
+            $userModel->direccion = $_POST["direccion"];
+            $userModel->telefono = $_POST["telefono"];
+            $userModel->username = $_POST["email"];
+            $userModel->username = $_POST["provincia"];
+            $userModel->username = $_POST["poblacion"];
+            $userModel->username = $_POST["codigo_postal"];
+            $userModel->username = $_POST["admin"];
+            $userModel->modificar();
+        }
+        break;
+
+        case "deleteUser":
+            if(isset($_POST)){
+                $userModel->setId($_POST['id']);
+            }
         break;
     }
 ?>
