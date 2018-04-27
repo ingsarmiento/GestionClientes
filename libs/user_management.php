@@ -4,12 +4,12 @@
     $userModel = new Usuario();
     $filter = "";
 
-    if(isset($_POST['filtro'])){
-        $filter = $_POST['filtro'];
+    if(isset($_REQUEST['filtro'])){
+        $filter = $_REQUEST['filtro'];
     }
     $order = "";
-    if(isset($_POST['order'])){
-        $order = $_POST['order'];
+    if(isset($_REQUEST['order'])){
+        $order = $_REQUEST['order'];
     }
 
     switch($_REQUEST['action']){
