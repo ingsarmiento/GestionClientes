@@ -6,7 +6,7 @@
 
         public function __construct($table)
         {
-            $this->db = new mysqli('localhost','root','root','pruebadb');
+            $this->db = new mysqli('localhost','root','','pruebadb');
             mysqli_set_charset($this->db,"utf8");
             $this->table = (string) $table;
         }
@@ -109,7 +109,8 @@
                     if($params != '')
                     {
                         //Si pasamos un conjunto de valores se recorre el array y se enlaza cada parametro con la consulta. 
-                        if(is_array($params)){
+                        if(is_array($params))
+                        {
                             call_user_func_array(array($query, 'bind_param'), $this->bindParameters($params));
                         }//Si se trata de un solo valor se enlaza dicho parametro.
                         else
@@ -119,9 +120,10 @@
                     }
                      $query->execute(); 
                      $res = $query->get_result();
-                     while($row = $res->fetch_assoc()){
-                        array_push($result, $row);
+                     if($res){
+                        $result = $res->fetch_object();
                      }
+                    
                 }
                 return json_encode($result,JSON_UNESCAPED_UNICODE);
             }
@@ -154,7 +156,7 @@
                     }
                      $query->execute(); 
                      $res = $query->get_result();
-                     while($row = $res->fetch_assoc()){
+                     while($row = $res->fetch_object()){
                         array_push($result, $row);
                      }
                 }

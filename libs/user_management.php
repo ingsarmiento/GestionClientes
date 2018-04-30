@@ -4,8 +4,8 @@
     $userModel = new Usuario();
     $filter = "";
 
-    if(isset($_REQUEST['filtro'])){
-        $filter = $_REQUEST['filtro'];
+    if(isset($_REQUEST['value'])){
+        $filter = $_REQUEST['value'];
     }
     $order = "";
     if(isset($_REQUEST['order'])){
@@ -26,11 +26,11 @@
             }
             if($_REQUEST['filter'] == "2")
             {
-                $resultset = $userModel->getRows("Select * from usuarios where nombre=? order by {$order}",$filter);
+                $resultset = $userModel->getRows("Select * from usuarios where nombre like ? order by {$order}","%{$filter}%");
             }
             if($_REQUEST['filter'] == "3")
             {
-                $resultset = $userModel->getRows("Select * from usuarios where apellido=? order by {$order}",$filter);
+                $resultset = $userModel->getRows("Select * from usuarios where apellido like ? order by {$order}","%{$filter}%");
             }
             
             if($resultset != null)
