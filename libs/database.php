@@ -6,7 +6,7 @@
 
         public function __construct($table)
         {
-            $this->db = new mysqli('localhost','root','','pruebadb');
+            $this->db = new mysqli('localhost','root','root','pruebadb');
             mysqli_set_charset($this->db,"utf8");
             $this->table = (string) $table;
         }
@@ -28,11 +28,13 @@
                 $query->execute();
                 if($query)
                 {
-                    return $query->affected_rows();
+                    $res = "Datos insertados correctamente:";
+                    return json_encode($res);
                 }
                 else
                 {
-                    return 0;
+                    $error= "Ha ocurrido un problema, los datos no se han guardado.";
+                    return json_encode($error);
                 }
             }
             else

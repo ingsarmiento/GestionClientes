@@ -17,8 +17,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Usuario</a>
             <div class="dropdown-menu" aria-labelledby="dropdown02">
               <a class="dropdown-item" href="/usuarios">Listar Usuarios</a>
-              <a class="dropdown-item" href="#">Nuevo Usuario</a>
-            </div>
+              <a class="dropdown-item" href="../guardar_usuario.php">Nuevo Usuario</a>
         </li>
     </ul>
 
@@ -33,7 +32,5 @@
               <a class="dropdown-item" href="../views/logout.php">Cerrar Sesión</a>
             </div>
         </li>
-
     </ul>
-       
 </div>

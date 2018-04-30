@@ -14,10 +14,12 @@
     <script>
     
     //Area de usuarios
+
+    //Listar Usuarios
     $('#userFilterForm').submit(function(e)
     {
-        e.preventDefault();
-        return false;
+        /*e.preventDefault();
+        return false;*/
     });
     
     var tBody = $("#tbody");
@@ -65,6 +67,44 @@
         tBody.append('<td><a href="libs/user_management.php?action=deleteUsers&id='+element.id+'">Eliminar</a></td>');
         tBody.append('</tr><a></a>');
       }
+    }
+
+    //Guardar Usuario
+    function guardarUsuario()
+    {
+      var username = $("#username").val();
+      var password = $("#password").val();
+      var dni = $("#dni").val();
+      var nombre = $("#nombre").val();
+      var apellido = $("#apellido").val();
+      var direccion = $("#direccion").val();
+      var telefono = $("#telefono").val();
+      var mail = $("#email").val();
+      var admin = $("#admin").val();
+
+      //Enviar datos 
+      $.ajax(
+        {
+          type:"POST",
+          url:"libs/user_management.php",
+          data:
+          {
+            username:username, password:password, dni:dni, nombre:nombre, apellido:apellido,
+            direccion:direccion, telefono:telefono, email:email, admin:admin  
+          },
+          dataType:"JSON",
+          success: function(data)
+          {
+            $("#message").html(data);
+            $("p").addClass("alert alert-success");
+            
+          },
+          error: function(err)
+            {
+              alert(err);
+            }
+        });
+
     }
 
     //Fin Area de usuarios
