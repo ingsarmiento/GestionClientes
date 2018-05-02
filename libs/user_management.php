@@ -22,15 +22,15 @@
             {
                 $resultset = $userModel->getRows("Select * from usuarios order by {$order}");
             }
-            if($_REQUEST['filter'] == "1")
+            if($_REQUEST['filter'] == "1" && $filter != "") 
             {
                 $resultset = $userModel->getRow("Select * from usuarios where username=?",$filter);
             }
-            if($_REQUEST['filter'] == "2")
+            if($_REQUEST['filter'] == "2" && $filter != "")
             {
                 $resultset = $userModel->getRows("Select * from usuarios where nombre like ? order by {$order}","%{$filter}%");
             }
-            if($_REQUEST['filter'] == "3")
+            if($_REQUEST['filter'] == "3" && $filter != "")
             {
                 $resultset = $userModel->getRows("Select * from usuarios where apellido like ? order by {$order}","%{$filter}%");
             }
@@ -43,21 +43,33 @@
         break;
 
         case "saveUser":
-            if(isset($_POST)){
-                echo $_POST["inputUsername"];
-                $userModel->username = $_POST["inputUsername"];
-                $userModel->password = $_POST["inputPassword"];
-                $userModel->dni = $_POST["inputDni"];
-                $userModel->nombre = $_POST["inputNombre"];
-                $userModel->apellido = $_POST["inputApellido"];
-                $userModel->direccion = $_POST["inputDireccion"];
-                $userModel->telefono = $_POST["inputTelefono"];
-                $userModel->username = $_POST["inputEmail"];
-                $userModel->username = $_POST["inputProvincia"];
-                $userModel->username = $_POST["inputPoblacion"];
-                $userModel->username = $_POST["inputCodigo_postal"];
-                $userModel->username = $_POST["inputAdmin"];
-                $userModel->guardar();
+            if(isset($_REQUEST))
+            {
+                $userModel->username = $_REQUEST["username"];
+                $userModel->password = $_REQUEST["password"];
+                $userModel->dni = $_REQUEST["dni"];
+                $userModel->nombre = $_REQUEST["nombre"];
+                $userModel->apellido = $_REQUEST["apellido"];
+                $userModel->direccion = $_REQUEST["direccion"];
+                $userModel->telefono = $_REQUEST["telefono"];
+                $userModel->email = $_REQUEST["email"];
+                $userModel->provincia = $_REQUEST["provincia"];
+                $userModel->poblacion = $_REQUEST["poblacion"];
+                $userModel->codigo_postal = $_REQUEST["codigo_postal"];
+                $userModel->admin = $_REQUEST["admin"];
+                $guardado = $userModel->guardar();
+                if($guardado != null && $guardado)
+                { 
+                    echo json_encode(array("mensaje"=>"Los datos han sido guardados correctamente","success"=>$guardado));
+                }
+                else if($guardado != null && $guardado)
+                {
+                    echo json_encode(array("mensaje"=>"Ha ocurrido un problema, no se han podido guardar los datos!","success"=>$guardado));
+                }
+                else
+                {
+                    echo json_encode(array("mensaje"=>"No se ha podido establecer conexión con el servidor, intente nuevamente","success"=>$guardado));
+                }
             }
         break;
 

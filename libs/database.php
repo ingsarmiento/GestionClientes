@@ -26,16 +26,7 @@
                 $query = $this->db->prepare($sql);
                 call_user_func_array(array($query, 'bind_param'), $this->bindParameters($params));
                 $query->execute();
-                if($query)
-                {
-                    $res = "Datos insertados correctamente:";
-                    return json_encode($res);
-                }
-                else
-                {
-                    $error= "Ha ocurrido un problema, los datos no se han guardado.";
-                    return json_encode($error);
-                }
+                return $query;
             }
             else
            {
@@ -50,14 +41,7 @@
                 $query = $this->db->prepare($sql);
                 call_user_func_array(array($query, 'bind_param'), $this->bindParameters($params));
                 $query->execute();
-                if($query)
-                {
-                    return $query->affected_rows();
-                }
-                else
-                {
-                    return 0;
-                }
+                return $query;
             }
             else
            {
@@ -186,10 +170,10 @@
                 case 'object':
                     return 'o';
                     break;
-                case 'boolean':
+                case 'bool':
                     return 'b';
                     break;
-                case 'null':
+                case 'number':
                     return 'n';
                     break;
                 case 'array':

@@ -2,10 +2,13 @@
 include('libs/header.php');
 ?>
 <div class="container col-sm-8">
+
     <div class="card">
-        <p id="message">
+        <div id="notification" role="alert">
+            <p id="message" ></p>
+        </div>
         
-        </p>
+
         <div class="card-body">
             <h5 class="card-title">Nuevo Usuario</h5>
             <form id="saveUserForm" action="" method="POST">
@@ -86,15 +89,12 @@ include('libs/header.php');
                     </div>
                 </div>
 
-                <!--div class="form-group row">
-                    <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
-                    <div class="input-group date" data-provide="datepicker">
-                        <input type="text" class="form-control">
-                        <div class="input-group-addon">
-                            <span class="glyphicon glyphicon-th"></span>
-                        </div>
+                <div class="form-group row">
+                    <label for="inputDate" class="col-2 col-form-label">Fecha</label>
+                    <div class="col-10">
+                        <input class="form-control" type="date" id="inputDate">
                     </div>
-                </div-->
+                </div>
 
                 <div class="form-group row">
                     <div class="col-sm-10">
@@ -103,13 +103,13 @@ include('libs/header.php');
                             <label class="form-check-label" for="inputAdmin">Administrador</label>
                         </div>
                     </div>
-                </div-->
+                </div>
             </form>
+            
+            <div class="card_footer text-right">
+                <button type="submit" class="btn btn-primary" id="saveButton">Guardar</button>
+            </div>
         </div> 
-
-        <div class="card_footer text-right">
-            <button type="submit" class="btn btn-primary" id="saveButton">Guardar</button>
-        </div>
         
 </div>
 
@@ -119,25 +119,6 @@ include('libs/footer.php');
 
 <script>
     //Guardar Usuario
-    function guardarUsuario()
-    {
-      var username = $("#inputUsername").val();
-      var password = $("#inputPassword").val();
-      var dni = $("#inputDni").val();
-      var nombre = $("#inputNombre").val();
-      var apellido = $("#inputApellido").val();
-      var direccion = $("#inputDireccion").val();
-      var telefono = $("#inputTelefono").val();
-      var provincia = $("#inputProvincia").val();
-      var telefono = $("#inputPoblacion").val();
-      var mail = $("#inputEmail").val();
-      var admin = false;
-      if($("#inputAdmin").checked)
-      {
-          admin = true;
-      }
-      
-    }
     $("#saveButton").click(function()
     {
 
@@ -153,34 +134,33 @@ include('libs/footer.php');
         var codigo_postal = $("#inputCodigo_postal").val();
         var telefono = $("#inputTelefono").val();
         var email = $("#inputEmail").val();
-        var admin = false;
-
-        if($("#inputAdmin").checked)
+        var admin = 0; 
+        
+        if($("#inputAdmin").prop('checked'))
         {
-            admin = true;
+            admin = 1;
         }
+        
 
-        var data = 
-        {
-            "username":username,
-            "password":password,
-            "dni":dni,
-            "nombre":nombre,
-            "apellido":apellido,
-            "direcion":direccion,
-            "provincia":provincia,
-            "poblacion":poblacion,
-            "codigo_postal":codigo_postal,
-            "telefono":telefono,
-            "email":email,
-            "admin":admin
-        };
-
-        console.log(data);
-
-        /*$.post('libs/user_management.php?action=saveUser&data='+data, function(response)
+        $.post("libs/user_management.php?action=saveUser&username="+username+"&password="+password
+        +"&dni="+dni+"&nombre="+nombre+"&apellido="+apellido+"&direccion="+direccion+"&provincia="+provincia
+        +"&poblacion="+poblacion+"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email
+        +"&admin="+admin, function(response)
         {
             console.log(response);
-        });*/
+            var mensaje = $("#message");
+            var notification = $("#notification");
+            var resultado = JSON.parse(response);
+
+            if(resultado.success)
+            {
+                notification.addClass("alert alert-success");
+            }
+            else if(resultado.success == null || !resultado.success)
+            {
+                notification.addClass("alert alert-danger");
+            }
+            mensaje.html(resultado.mensaje); 
+        });
     });
 </script>
