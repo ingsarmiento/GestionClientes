@@ -6,7 +6,7 @@
 
         public function __construct($table)
         {
-            $this->db = new mysqli('localhost','root','root','pruebadb');
+            $this->db = new mysqli('localhost','root','','pruebadb');
             mysqli_set_charset($this->db,"utf8");
             $this->table = (string) $table;
         }

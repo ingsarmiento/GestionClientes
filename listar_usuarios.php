@@ -58,9 +58,12 @@ include('libs/header.php');
             <table class='table table-bordered'>
                 <thead>
                     <tr>
+                        <th scope='col'> DNI</th>
                         <th scope='col'> NOMBRE</th>
                         <th scope='col'> APELLIDO</th>
                         <th scope='col'> DIRECCIÓN</th>
+                        <th scope='col'> PROVINCIA</th>
+                        <th scope='col'> POBLACIÓN</th>
                         <th scope='col'> TÉLEFONO </th> 
                         <th scope='col'> EMAIL </th>
                         <th scope='col'> USUARIO </th>
@@ -119,10 +122,10 @@ include('libs/footer.php');
             
             if(Array.isArray(users) && users.length > 0)
             {
-            users.forEach(function(element)
-            {
-                showColumn(element);
-            });
+                users.forEach(function(element)
+                {
+                    showColumn(element);
+                });
             }
             else if(typeof(users) == 'object' && users != null)
             {
@@ -137,9 +140,12 @@ include('libs/footer.php');
       if(element != null)
       {
         tBody.append('<tr>');
+        tBody.append('<td>'+element.dni+'</td>');
         tBody.append('<td>'+element.nombre+'</td>');
         tBody.append('<td>'+element.apellido+'</td>');
         tBody.append('<td>'+element.direccion+'</td>');
+        tBody.append('<td>'+element.provincia+'</td>');
+        tBody.append('<td>'+element.poblacion+'</td>');
         tBody.append('<td>'+element.telefono+'</td>');
         tBody.append('<td>'+element.email+'</td>');
         tBody.append('<td>'+element.username+'</td>');
@@ -151,3 +157,5 @@ include('libs/footer.php');
       }
     }
 </script>
+
+<!-- Sección Modificar -->

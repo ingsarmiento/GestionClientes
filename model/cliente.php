@@ -38,10 +38,10 @@ class Cliente extends Database
     {
         //Instrucción SQL
         $sql = "insert into clientes(dni, nombre, apellido, direccion, telefono, email, provincia, poblacion, codigo_postal)
-        values(?, ?, ?, ?, ?, ?)";
+        values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         //Obtenemos los parametros proporcionados por el usuario.
         $params = array($this->dni, $this->nombre, $this->apellido, $this->direccion,$this->telefono,
-        $this->email,$provincia,$poblacion,$codigo_postal);
+        $this->email,$this->provincia,$this->poblacion,$this->codigo_postal);
         return $this->insert($sql, $params);
     }
     /**

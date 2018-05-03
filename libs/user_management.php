@@ -83,18 +83,43 @@
             $userModel->apellido = $_POST["apellido"];
             $userModel->direccion = $_POST["direccion"];
             $userModel->telefono = $_POST["telefono"];
-            $userModel->username = $_POST["email"];
-            $userModel->username = $_POST["provincia"];
-            $userModel->username = $_POST["poblacion"];
-            $userModel->username = $_POST["codigo_postal"];
-            $userModel->username = $_POST["admin"];
-            $userModel->modificar();
+            $userModel->email = $_POST["email"];
+            $userModel->provincia = $_POST["provincia"];
+            $userModel->poblacion = $_POST["poblacion"];
+            $userModel->codigo_postal = $_POST["codigo_postal"];
+            $userModel->admin = $_POST["admin"];
+            $modificado = $userModel->modificar();
+            if($modificado != null && $modificado)
+            { 
+                echo json_encode(array("mensaje"=>"Los cambios han sido guardados correctamente","success"=>$modificado));
+            }
+            else if($modificado != null && $modificado)
+            {
+                echo json_encode(array("mensaje"=>"Ha ocurrido un problema, no se han podido guardar los cambios!","success"=>$modificado));
+            }
+            else
+            {
+                echo json_encode(array("mensaje"=>"No se ha podido establecer conexión con el servidor, intente nuevamente","success"=>$modificado));
+            }
         }
         break;
 
         case "deleteUser":
             if(isset($_POST)){
                 $userModel->setId($_POST['id']);
+                $borrado = $userModel->borrar();
+                if($borrado != null && $borrado)
+                { 
+                    echo json_encode(array("mensaje"=>"El registro ha sido borrado de la base de datos","success"=>$borrado));
+                }
+                else if($borrado != null && $borrado)
+                {
+                    echo json_encode(array("mensaje"=>"Ha ocurrido un problema, no se han podido borrar el registro de la base de datos!","success"=>$borrado));
+                }
+                else
+                {
+                    echo json_encode(array("mensaje"=>"No se ha podido establecer conexión con el servidor, intente nuevamente","success"=>$borrado));
+                }
             }
         break;
     }

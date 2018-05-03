@@ -9,7 +9,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Clientes</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="/clientes">Listar Clientes</a>
-              <a class="dropdown-item" href="#">Nuevo Cliente</a>
+              <a class="dropdown-item" href="/clientes/guardar">Nuevo Cliente</a>
             </div>
         </li>
             
@@ -17,7 +17,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Usuario</a>
             <div class="dropdown-menu" aria-labelledby="dropdown02">
               <a class="dropdown-item" href="/usuarios">Listar Usuarios</a>
-              <a class="dropdown-item" href="../guardar_usuario.php">Nuevo Usuario</a>
+              <a class="dropdown-item" href="usuarios/guardar">Nuevo Usuario</a>
         </li>
     </ul>
 
@@ -28,8 +28,8 @@
             <div class="dropdown-menu" aria-labelledby="dropdown03">
               <a class="dropdown-item"><?php //if(isset($_SESSION)) echo $_SESSION['nombre']; ?></a>
               <a class="dropdown-item" role="divider"></a>
-              <a class="dropdown-item" href="#">Cambiar contraseña</a>
-              <a class="dropdown-item" href="../views/logout.php">Cerrar Sesión</a>
+              <a class="dropdown-item" href="/usuarios/cambiar_contrasenia">Cambiar contraseña</a>
+              <a class="dropdown-item" href="/logout">Cerrar Sesión</a>
             </div>
         </li>
     </ul>

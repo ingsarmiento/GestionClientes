@@ -4,26 +4,59 @@
     switch($request_uri[0])
     {
         case '/':
-            require 'views/home.php';
+            require 'home.php';
             break;
+
         case '/login':
-            require 'views/login.php';
+            require 'login.php';
             break;
+        case '/logout':
+            require 'logout.php';
+            break;
+
         case '/usuarios':
             //if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
-                require 'views/listar_usuarios.php';
+                require 'listar_usuarios.php';
             /*}else
             {
                 echo $accessDenied;
             }*/
             break;
+
+        case '/usuarios/guardar':
+            //if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
+                require 'guardar_usuario.php';
+            /*}else
+            {
+                echo $accessDenied;
+            }*/
+            break;
+
+        case '/usuarios/cambiar_contrasenia':
+            //if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
+                require 'change_password.php';
+            /*}else
+            {
+                echo $accessDenied;
+            }*/
+            break;
+
         case '/clientes':
             //if(isset($_SESSION) && $_SESSION['loggedin']){
-                require 'views/listar_clientes.php';
+                require 'listar_clientes.php';
             //}else
             //{
                 //echo $accessDenied;
             //}
+            break;
+
+            case '/clientes/guardar':
+            //if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
+                require 'guardar_cliente.php';
+            /*}else
+            {
+                echo $accessDenied;
+            }*/
             break;
             default:
                 header('HTTP/1.0 404 Not Found');
