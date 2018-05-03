@@ -33,11 +33,12 @@ class Usuario extends Database
     {
         //Obtenemos los parametros proporcionados por el usuario.
         $params = array($this->username, $this->dni, $this->nombre, $this->apellido, $this->direccion, 
-        $this->telefono, $this->email, $this->admin,$this->id);
-        $sql = "Update usuarios set username=?, dni=?, nombre=?, apellido=?, direccion=?, telefono=?, 
-        email=?, admin=? where id = ?";
+        $this->provincia, $this->poblacion, $this->codigo_postal, $this->telefono, $this->email, $this->admin,$this->getId());
+        $sql = "Update usuarios set username=?, dni=?, nombre=?, apellido=?, direccion=?, provincia=?, poblacion=?, codigo_postal=?,
+        telefono=?, email=?, admin=? where id =?";
         //Ejecutamos la actualizacion de los datos.
-        return $this->update($sql,$params);
+        return $this->getId();
+        //return $this->update($sql,$params);
     }
 
     public function borrar($id)

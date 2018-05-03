@@ -1,6 +1,6 @@
 <?php
-//Header Section 
-include('libs/header.php');
+    //Header Section 
+    include('libs/header.php');
 ?>
     <!-- Custom styles for this template -->
     <link href="../assets/css/app.css" rel="stylesheet">
@@ -61,6 +61,7 @@ include('libs/header.php');
                         <th scope='col'> DIRECCIÓN</th>
                         <th scope='col'> PROVINCIA</th>
                         <th scope='col'> POBLACIÓN</th>
+                        <th scope='col'> CÓDIGO POSTAL</th>
                         <th scope='col'> TÉLEFONO </th> 
                         <th scope='col'> EMAIL </th>
                         <th scope='col'> FECHA DE ALTA</th>
@@ -78,8 +79,8 @@ include('libs/header.php');
     </div>
 
 <?php
-//Footer Section
-include('libs/footer.php');
+    //Footer Section
+    include('libs/footer.php');
 ?>
 
 <script>
@@ -101,7 +102,6 @@ include('libs/footer.php');
         {
             filtro = $('#filtro').val()
         }
-        console.log(filtro);
       $.post('libs/client_management.php?action=getClients&filter='+$('#filtrarPor option:selected').val()
       +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val(),
       function(response){
@@ -142,13 +142,62 @@ include('libs/footer.php');
         tBody.append('<td>'+element.direccion+'</td>');
         tBody.append('<td>'+element.provincia+'</td>');
         tBody.append('<td>'+element.poblacion+'</td>');
+        tBody.append('<td>'+element.codigo_postal+'</td>');
         tBody.append('<td>'+element.telefono+'</td>');
         tBody.append('<td>'+element.email+'</td>');
         tBody.append('<td>'+element.created_at+'</td>');
-        tBody.append('<td><a href="libs/client_management.php?action=getClient&id='+element.id+'">Detalle</a></td>');
-        tBody.append('<td><a href="libs/client_management.php?action=updateClient&id='+element.id+'">Modificar</a></td>');
-        tBody.append('<td><a href="libs/client_management.php?action=deleteClient&id='+element.id+'">Eliminar</a></td>');
+        tBody.append('<td><i class="fas fa-eye"><a href="libs/client_management.php?action=getClient&id='+element.id+'">Detalle</a></i></td>');
+        tBody.append('<td><i class="fas fa-edit"><a href="libs/client_management.php?action=updateClient&id='+element.id+'">Modificar</a></i></td>');
+        tBody.append('<td><i class="fas fa-trash-alt"><a href="libs/client_management.php?action=deleteClient&id='+element.id+'">Eliminar</a></i></td>');
         tBody.append('</tr>');
       }
     }
 </script>
+
+<!-- Modal -->
+<div class="modal fade" id="modificarCliente" tabindex="-1" role="dialog" aria-labelledby="ModificarClienteTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modificarClienteLongTitle">Modificar Cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="dni" placeholder="DNI">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="apellido" placeholder="Apellido">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="dirección" placeholder="Dirección">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="provincia" placeholder="Provincia">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="poblacion" placeholder="Población">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="codigo_postal" placeholder="codigo_postal">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="telefono" placeholder="Télefono">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="email" class="form-control" id="email" placeholder="Email">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>

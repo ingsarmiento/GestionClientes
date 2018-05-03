@@ -42,6 +42,18 @@
 
         break;
 
+        case 'getUser':
+                $resulset = null;
+                if(isset($_GET))
+                {
+                    $resultset = $userModel->getRow("Select username, dni, nombre, apellido, direccion, provincia, poblacion, codigo_postal, telefono, email from usuarios where id=?",$_REQUEST['id']);
+                    if($resultset != null)
+                    {
+                       echo $resultset;
+                    } 
+                }
+            break;
+
         case "saveUser":
             if(isset($_REQUEST))
             {
@@ -73,23 +85,24 @@
             }
         break;
 
-        case "editUser":
+        case "update":
         if(isset($_POST))
         {
-            $userModel->setId($_POST["id"]);
-            $userModel->username = $_POST["username"];
-            $userModel->password = $_POST["password"];
-            $userModel->nombre = $_POST["nombre"];
-            $userModel->apellido = $_POST["apellido"];
-            $userModel->direccion = $_POST["direccion"];
-            $userModel->telefono = $_POST["telefono"];
-            $userModel->email = $_POST["email"];
-            $userModel->provincia = $_POST["provincia"];
-            $userModel->poblacion = $_POST["poblacion"];
-            $userModel->codigo_postal = $_POST["codigo_postal"];
-            $userModel->admin = $_POST["admin"];
+            $userModel->setId($_REQUEST["id"]);
+            $userModel->username = $_REQUEST["username"];
+            $userModel->dni = $_REQUEST["dni"];
+            $userModel->nombre = $_REQUEST["nombre"];
+            $userModel->apellido = $_REQUEST["apellido"];
+            $userModel->direccion = $_REQUEST["direccion"];
+            $userModel->telefono = $_REQUEST["telefono"];
+            $userModel->email = $_REQUEST["email"];
+            $userModel->provincia = $_REQUEST["provincia"];
+            $userModel->poblacion = $_REQUEST["poblacion"];
+            $userModel->codigo_postal = $_REQUEST["codigo_postal"];
+            $userModel->admin = $_REQUEST["admin"];
             $modificado = $userModel->modificar();
-            if($modificado != null && $modificado)
+            echo($modificado);
+            /*if($modificado != null && $modificado)
             { 
                 echo json_encode(array("mensaje"=>"Los cambios han sido guardados correctamente","success"=>$modificado));
             }
@@ -100,7 +113,7 @@
             else
             {
                 echo json_encode(array("mensaje"=>"No se ha podido establecer conexión con el servidor, intente nuevamente","success"=>$modificado));
-            }
+            }*/
         }
         break;
 
