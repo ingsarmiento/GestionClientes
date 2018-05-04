@@ -51,8 +51,8 @@
         <hr>
         <br>
         
-        <div class="table-responsive">
-            <table class='table table-bordered'>
+        <div class="table-responsive-sm">
+            <table class='table table-sm table-bordered'>
                 <thead>
                     <tr>
                         <th scope='col'> DNI</th>
@@ -125,7 +125,7 @@
             }
             else if(typeof(clients) == 'object' && clients != null)
             {
-            showColumn(userclients);
+            showColumn(clients);
             }      
         }
         
@@ -135,23 +135,93 @@
     {
       if(element != null)
       {
-        tBody.append('<tr>');
-        tBody.append('<td>'+element.dni+'</td>');
-        tBody.append('<td>'+element.nombre+'</td>');
-        tBody.append('<td>'+element.apellido+'</td>');
-        tBody.append('<td>'+element.direccion+'</td>');
-        tBody.append('<td>'+element.provincia+'</td>');
-        tBody.append('<td>'+element.poblacion+'</td>');
-        tBody.append('<td>'+element.codigo_postal+'</td>');
-        tBody.append('<td>'+element.telefono+'</td>');
-        tBody.append('<td>'+element.email+'</td>');
-        tBody.append('<td>'+element.created_at+'</td>');
-        tBody.append('<td><i class="fas fa-eye"><a href="libs/client_management.php?action=getClient&id='+element.id+'">Detalle</a></i></td>');
-        tBody.append('<td><i class="fas fa-edit"><a href="libs/client_management.php?action=updateClient&id='+element.id+'">Modificar</a></i></td>');
-        tBody.append('<td><i class="fas fa-trash-alt"><a href="libs/client_management.php?action=deleteClient&id='+element.id+'">Eliminar</a></i></td>');
+        var id = element.id;
+        tBody.append('<tr id='+id+'>');
+        tBody.append('<td id="dni'+id+'">'+element.dni+'</td>');
+        tBody.append('<td id="nombre'+id+'">'+element.nombre+'</td>');
+        tBody.append('<td id="apellido'+id+'">'+element.apellido+'</td>');
+        tBody.append('<td id="direccion'+id+'">'+element.direccion+'</td>');
+        tBody.append('<td id="provincia'+id+'">'+element.provincia+'</td>');
+        tBody.append('<td id="poblacion'+id+'">'+element.poblacion+'</td>');
+        tBody.append('<td id="codigo_postal'+id+'">'+element.codigo_postal+'</td>');
+        tBody.append('<td id="telefono'+id+'">'+element.telefono+'</td>');
+        tBody.append('<td id="email'+id+'">'+element.email+'</td>');
+        tBody.append('<td id="created_at'+id+'">'+element.created_at+'</td>');
+        tBody.append('<td scope="row"><button id="btnGet'+id+'" onclick="getRow('+element.id+');"><i class="fas fa-eye"></i></button></td>');
+        tBody.append('<td scope="row"><button id="btnUpdate'+id+'" onclick="updateRow('+id+');" data-toggle="modal" data-target="#modificarCliente"><i class="fas fa-edit"></i></button></td>');
+        tBody.append('<td scope="row"><button id="btnDelete'+id+'" onclick="deleteRow('+id+');" data-toggle="modal" data-target="#borrarCliente"><i class="fas fa-trash-alt"></i></button></td>');
         tBody.append('</tr>');
       }
     }
+
+    $("#modificarUsuario").submit(function(e)
+    {
+        e.preventDefault();
+        return false;
+    });
+
+    function getRow(id)
+    { 
+        $.get('/libs/client_management.php?action=getUser&id='+id,
+            function(response)
+            {
+               return response;
+            }
+        );
+    }
+
+    //Carga los valores de los campos y actualiza el registro seleccionado.
+    function updateRow(id)
+    {
+        $("#dni").val($("#dni"+id).text());
+        $("#nombre").val($("#nombre"+id).text());
+        $("#apellido").val($("#apellido"+id).text());
+        $("#direccion").val($("#direccion"+id).text());
+        $("#provincia").val($("#provincia"+id).text());
+        $("#poblacion").val($("#poblacion"+id).text());
+        $("#codigo_postal").val($("#codigo_postal"+id).text());
+        $("#telefono").val($("#telefono"+id).text());
+        $("#email").val($("#email"+id).text());
+        
+        //Botón que ejecuta la accion de actualización.
+        $("#btnActualizarCliente").click(
+            function()
+            {
+                $.post('/libs/client_management.php?action=updateClient&id='+id+'&dni='+$("#dni").val()+'&nombre='+$("#nombre").val()
+                +'&apellido='+$("#apellido").val()+'&direccion='+$("#direccion").val()+'&provincia='+$("#provincia").val()
+                +'&poblacion='+$("#poblacion").val()+'&codigo_postal='+$("#codigo_postal").val()+'&telefono='+$("#telefono").val()+'&email='+$("#email").val(),
+                                
+                    function(response)
+                    {
+                        var mensaje = $("#mensaje");
+                        var jsonResponse = JSON.parse(response);
+                        if(jsonResponse.success)
+                        {
+                            mensaje.addClass('alert-success');
+                        }
+                        else
+                        {
+                            mensaje.addClass('alert-danger');
+                        }
+
+                        mensaje.html(jsonResponse.mensaje);
+                    }
+                );
+            }
+        );
+ 
+       $("#closeModal").click(function()
+       {
+           $("#mensaje").empty();
+       });
+       
+    }
+
+    function deleteRow(id)
+    {
+
+    }
+
 </script>
 
 <!-- Modal -->
@@ -160,11 +230,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modificarClienteLongTitle">Modificar Cliente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button id="closeModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <div>
+                    <p id="mensaje" class="lead"></p>
+                </div>
                 <form>
                     <div class="form-group mx-sm-3 mb-2">
                         <input type="text" class="form-control" id="dni" placeholder="DNI">
@@ -176,7 +249,7 @@
                         <input type="text" class="form-control" id="apellido" placeholder="Apellido">
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
-                        <input type="text" class="form-control" id="dirección" placeholder="Dirección">
+                        <input type="text" class="form-control" id="direccion" placeholder="Dirección">
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
                         <input type="text" class="form-control" id="provincia" placeholder="Provincia">
@@ -196,8 +269,31 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Actualizar</button>
+                <button id="btnActualizarCliente" type="button" class="btn btn-primary">Actualizar</button>
             </div>
         </div>
     </div>
+</div>
+
+<!--Modal borrar-->
+
+<!-- Modal borrar -->
+<div class="modal" tabindex="-1" role="dialog" id="borrarCliente">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Borrar Usuario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Está seguro que desea borrar el usuario seleccionado?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btnEliminar" type="button" class="btn btn-danger">Eliminar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
 </div>

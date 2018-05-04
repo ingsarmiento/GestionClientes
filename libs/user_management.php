@@ -46,13 +46,13 @@
                 $resulset = null;
                 if(isset($_GET))
                 {
-                    $resultset = $userModel->getRow("Select username, dni, nombre, apellido, direccion, provincia, poblacion, codigo_postal, telefono, email from usuarios where id=?",$_REQUEST['id']);
+                    $resultset = $userModel->getRow("Select username, dni, nombre, apellido, direccion, provincia, poblacion, codigo_postal, telefono, email, admin from usuarios where id=?",$_REQUEST['id']);
                     if($resultset != null)
                     {
                        echo $resultset;
                     } 
                 }
-            break;
+        break;
 
         case "saveUser":
             if(isset($_REQUEST))
@@ -85,7 +85,7 @@
             }
         break;
 
-        case "update":
+        case "updateUser":
         if(isset($_POST))
         {
             $userModel->setId($_REQUEST["id"]);
@@ -101,8 +101,8 @@
             $userModel->codigo_postal = $_REQUEST["codigo_postal"];
             $userModel->admin = $_REQUEST["admin"];
             $modificado = $userModel->modificar();
-            echo($modificado);
-            /*if($modificado != null && $modificado)
+
+            if($modificado != null && $modificado)
             { 
                 echo json_encode(array("mensaje"=>"Los cambios han sido guardados correctamente","success"=>$modificado));
             }
@@ -113,13 +113,13 @@
             else
             {
                 echo json_encode(array("mensaje"=>"No se ha podido establecer conexión con el servidor, intente nuevamente","success"=>$modificado));
-            }*/
+            }
         }
         break;
 
         case "deleteUser":
-            if(isset($_POST)){
-                $userModel->setId($_POST['id']);
+            if(isset($_REQUEST)){
+                $userModel->setId($_REQUEST['id']);
                 $borrado = $userModel->borrar();
                 if($borrado != null && $borrado)
                 { 

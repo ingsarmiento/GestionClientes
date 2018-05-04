@@ -16,23 +16,23 @@
 
     switch($_REQUEST['action']){
         
-        case 'getUsers':
+        case 'getClients':
             $resultset = null;
             if($_REQUEST['filter'] == "0")
             {
-                $resultset = $clientModel->getRows("Select * from usuarios order by {$order}");
+                $resultset = $clientModel->getRows("Select * from clientes order by {$order}");
             }
             if($_REQUEST['filter'] == "1" && $filter != "") 
             {
-                $resultset = $clientModel->getRow("Select * from usuarios where username=?",$filter);
+                $resultset = $clientModel->getRow("Select * from clientes where dni=?",$filter);
             }
             if($_REQUEST['filter'] == "2" && $filter != "")
             {
-                $resultset = $clientModel->getRows("Select * from usuarios where nombre like ? order by {$order}","%{$filter}%");
+                $resultset = $clientModel->getRows("Select * from clientes where nombre like ? order by {$order}","%{$filter}%");
             }
             if($_REQUEST['filter'] == "3" && $filter != "")
             {
-                $resultset = $clientModel->getRows("Select * from usuarios where apellido like ? order by {$order}","%{$filter}%");
+                $resultset = $clientModel->getRows("Select * from clientes where apellido like ? order by {$order}","%{$filter}%");
             }
             
             if($resultset != null)
@@ -42,7 +42,19 @@
 
         break;
 
-        case "saveUser":
+        case 'getClient':
+                $resulset = null;
+                if(isset($_GET))
+                {
+                    $resultset = $userModel->getRow("Select dni, nombre, apellido, direccion, provincia, poblacion, codigo_postal, telefono, email from clientes where id=?",$_REQUEST['id']);
+                    if($resultset != null)
+                    {
+                       echo $resultset;
+                    } 
+                }
+        break;
+
+        case "saveClient":
             if(isset($_REQUEST))
             {
                 $clientModel->dni = $_REQUEST["dni"];
@@ -70,38 +82,38 @@
             }
         break;
 
-        case "editUser":
-        if(isset($_POST))
-        {
-            $clientModel->setId($_POST["id"]);
-            $clientModel->dni = $_POST["dni"];
-            $clientModel->nombre = $_POST["nombre"];
-            $clientModel->apellido = $_POST["apellido"];
-            $clientModel->direccion = $_POST["direccion"];
-            $clientModel->telefono = $_POST["telefono"];
-            $clientModel->email = $_POST["email"];
-            $clientModel->provincia = $_POST["provincia"];
-            $clientModel->poblacion = $_POST["poblacion"];
-            $clientModel->codigo_postal = $_POST["codigo_postal"];
-            $modificado = $clientModel->modificar();
-            if($modificado != null && $modificado)
-            { 
-                echo json_encode(array("mensaje"=>"Los cambios han sido guardados correctamente","success"=>$modificado));
-            }
-            else if($modificado != null && $modificado)
+        case "updateClient":
+            if(isset($_POST))
             {
-                echo json_encode(array("mensaje"=>"Ha ocurrido un problema, no se han podido guardar los cambios!","success"=>$modificado));
+                $clientModel->setId($_REQUEST["id"]);
+                $clientModel->dni = $_REQUEST["dni"];
+                $clientModel->nombre = $_REQUEST["nombre"];
+                $clientModel->apellido = $_REQUEST["apellido"];
+                $clientModel->direccion = $_REQUEST["direccion"];
+                $clientModel->telefono = $_REQUEST["telefono"];
+                $clientModel->email = $_REQUEST["email"];
+                $clientModel->provincia = $_REQUEST["provincia"];
+                $clientModel->poblacion = $_REQUEST["poblacion"];
+                $clientModel->codigo_postal = $_REQUEST["codigo_postal"];
+                $modificado = $clientModel->modificar();
+                if($modificado != null && $modificado)
+                { 
+                    echo json_encode(array("mensaje"=>"Los cambios han sido guardados correctamente","success"=>$modificado));
+                }
+                else if($modificado != null && $modificado)
+                {
+                    echo json_encode(array("mensaje"=>"Ha ocurrido un problema, no se han podido guardar los cambios!","success"=>$modificado));
+                }
+                else
+                {
+                    echo json_encode(array("mensaje"=>"No se ha podido establecer conexión con el servidor, intente nuevamente","success"=>$modificado));
+                }
             }
-            else
-            {
-                echo json_encode(array("mensaje"=>"No se ha podido establecer conexión con el servidor, intente nuevamente","success"=>$modificado));
-            }
-        }
         break;
 
-        case "deleteUser":
-            if(isset($_POST)){
-                $clientModel->setId($_POST['id']);
+        case "deleteClient":
+            if(isset($_REQUEST)){
+                $clientModel->setId($_REQUEST['id']);
                 $borrado = $clientModel->borar();
                 if($borrado != null && $borrado)
                 { 

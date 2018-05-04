@@ -37,8 +37,7 @@ class Usuario extends Database
         $sql = "Update usuarios set username=?, dni=?, nombre=?, apellido=?, direccion=?, provincia=?, poblacion=?, codigo_postal=?,
         telefono=?, email=?, admin=? where id =?";
         //Ejecutamos la actualizacion de los datos.
-        return $this->getId();
-        //return $this->update($sql,$params);
+        return $this->update($sql,$params);
     }
 
     public function borrar($id)

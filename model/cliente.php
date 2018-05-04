@@ -1,5 +1,5 @@
 <?php
-require_once('/libs/database.php');
+require_once('../libs/database.php');
 class Cliente extends Database
 {
     //Identificador del cliente
@@ -50,12 +50,12 @@ class Cliente extends Database
      */
     public function modificar()
     { 
-        //Instrucción SQL
-        $sql = "Update clientes set dni=?, nombre=?, apellido=?, direccion=?, telefono=?, 
-        email=? provincia=?, poblacion=?, codigo_postal=? where id = ?";
         //Obtenemos los parametros proporcionados por el usuario.
         $params = array($this->dni, $this->nombre, $this->apellido, $this->direccion, 
-        $this->telefono, $this->email, $this->provincia, $this->poblacion, $this->codigo_postal,$this->id);
+        $this->telefono, $this->email, $this->provincia, $this->poblacion, $this->codigo_postal,$this->getId());
+        //Instrucción SQL
+        $sql = "Update clientes set dni=?, nombre=?, apellido=?, direccion=?, telefono=?, email=?, provincia=?,
+        poblacion=?, codigo_postal=? where id =?";
         //Ejecutamos la actualizacion de los datos.
         return $this->update($sql,$params);
     }
