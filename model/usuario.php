@@ -40,9 +40,9 @@ class Usuario extends Database
         return $this->update($sql,$params);
     }
 
-    public function borrar($id)
+    public function borrar()
     {
-        return $this->delete($id);
+        return $this->delete($this->getId());
     }
 }
 ?>

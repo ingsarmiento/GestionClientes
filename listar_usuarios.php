@@ -78,6 +78,9 @@ include('libs/header.php');
             <table/>
         </div>
         
+        <div>
+        <ul id="pagination" class="pagination-sm"></ul>
+        </div>
     </div>
 
 <?php
@@ -95,7 +98,8 @@ include('libs/footer.php');
     });
     
     var tBody = $("#tbody");
-
+    var pages = 0;
+    var content;
     //evento click del boton listar.
     $("#btnListar").click(function()
     {
@@ -108,27 +112,75 @@ include('libs/footer.php');
       +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val(),
       function(response){
         tBody.empty();
-        showColumns(response);
+        var jsonResponse = JSON.parse(response); 
+        var rows = jsonResponse.length;
+        
+        if( rows >= 10)
+        {
+            mod = rows%10;
+            if(mod > 0 && mod < 4)
+            {
+                pages = Math.round(rows/10) + 1;
+            }
+            else
+            {
+                pages = Math.round(rows/10);
+            }
+        } 
+        else
+        {
+            pages = 1;
+        }
+        var content = [];
+        if(pages > 1)
+        {
+            var i = 0;
+            jsonResponse.foreach
+            (
+                function(element)
+                {
+                    content.push(element);
+                    i++;
+                    if(i == 10)
+                    {
+                        showColumns(JSON.parse(content)); // Dividir en grupos de 10, Mostrar primer grupo, los demas grupos los debe mostrar el panel de paginación.
+                    }
+                }
+            );
+        }
+        else
+        {
+            showColumns(jsonResponse);
+        }
+
+        
       });
+    });
+
+    $('#pagination').twbsPagination({
+        totalPages: pages,
+        visiblePages: 5,
+        onPageClick: function (event, page) {
+            //$('#page-content').text('Page ' + page);
+        }
     });
 
     function showColumns(data)
     {
         if(data != null)
         {
-            //console.log(data);
-            var users = JSON.parse(data); 
+            //var users = JSON.parse(data); 
             
-            if(Array.isArray(users) && users.length > 0)
+            if(Array.isArray(data) && data.length > 0)
             {
-                users.forEach(function(element)
+                data.forEach(function(element)
                 {
                     showColumn(element);
                 });
             }
-            else if(typeof(users) == 'object' && users != null)
+            else if(typeof(data) == 'object' && data != null)
             {
-                showColumn(users);
+                showColumn(data);
             }      
         }
         
@@ -246,15 +298,22 @@ include('libs/footer.php');
 
     function deleteRow(id)
     {
+        var mensaje ='';
         $("#btnEliminar").click(
             function()
             {
-                /*$.post('/libs/user_management.php?action=deleteUser&id='+id, 
+                $.post('/libs/user_management.php?action=deleteUser&id='+id, 
                     function(response)
                     {
-                        console.log(response);
+                        if(response != null)
+                        {
+                            jsonResponse = JSON.parse(response);
+                            $("#borrarUsuario").modal('hide');
+                            mensaje = jsonResponse.mensaje;
+                            $("#btnListar").trigger("click");   
+                        }
                     }
-                );*/ 
+                );  
             }
         );
     }   

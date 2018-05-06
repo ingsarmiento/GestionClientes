@@ -6,7 +6,7 @@
 
         public function __construct($table)
         {
-            $this->db = new mysqli('localhost','root','root','pruebadb');
+            $this->db = new mysqli('localhost','root','','pruebadb');
             mysqli_set_charset($this->db,"utf8");
             $this->table = (string) $table;
         }
@@ -55,17 +55,13 @@
                 $query = $this->db->prepare("delete from {$this->table} where id=?");
                 $query->bind_param('i',$id);
                 $query->execute();
-                if($query){
-                    return (int) $query->affected_rows();
-                }
-                else
-                {
-                    return 0;
-                }
+                
+                return $query;
+                
             }
             else
             {
-                return null;
+                return false;
             }
         }
 
@@ -125,6 +121,7 @@
             {
                 //Esta variable almacena los resultados obtenidos.
                 $result = [];
+                $rowsAffected = 0;
                 $query = $this->db->stmt_init();
                 if($query->prepare($sql))
                 {
@@ -141,10 +138,15 @@
                         }
                     }
                      $query->execute(); 
-                     $res = $query->get_result();
-                     while($row = $res->fetch_object()){
-                        array_push($result, $row);
+                     if($query)
+                     {
+                        $res = $query->get_result(); 
+                        //$rowsAffected = $res->affected_rows;
+                        while($row = $res->fetch_object()){
+                            array_push($result, $row);
+                        }
                      }
+                     
                 }
                 return json_encode($result,JSON_UNESCAPED_UNICODE);
             }

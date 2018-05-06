@@ -93,7 +93,8 @@
     });
     
     var tBody = $("#tbody");
-
+    var pages = 0;
+    var content;
     //evento click del boton listar.
     $("#btnListar").click(function()
     {
@@ -125,7 +126,7 @@
             }
             else if(typeof(clients) == 'object' && clients != null)
             {
-            showColumn(clients);
+                showColumn(clients);
             }      
         }
         
@@ -219,7 +220,24 @@
 
     function deleteRow(id)
     {
-
+        var mensaje ='';
+        $("#btnEliminar").click(
+            function()
+            {
+                $.post('/libs/client_management.php?action=deleteUser&id='+id, 
+                    function(response)
+                    {
+                        if(response != null)
+                        {
+                            jsonResponse = JSON.parse(response);
+                            $("#borrarCliente").modal('hide');
+                            mensaje = jsonResponse.mensaje;
+                            $("#btnListar").trigger("click");   
+                        }
+                    }
+                );  
+            }
+        );
     }
 
 </script>
@@ -282,13 +300,13 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Borrar Usuario</h5>
+        <h5 class="modal-title">Borrar Cliente</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>¿Está seguro que desea borrar el usuario seleccionado?</p>
+        <p>¿Está seguro que desea borrar el cliente seleccionado?</p>
       </div>
       <div class="modal-footer">
         <button id="btnEliminar" type="button" class="btn btn-danger">Eliminar</button>

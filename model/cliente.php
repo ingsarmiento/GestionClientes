@@ -64,7 +64,7 @@ class Cliente extends Database
      * Este metodo Ejecuta el metodo de la clase padre Database 
      * que se encarga de borrar un registro de la base de datos.
      */
-    public function borrar($id)
+    public function borrar()
     {
         $this->delete($id);
     }
