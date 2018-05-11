@@ -17,7 +17,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Usuario</a>
             <div class="dropdown-menu" aria-labelledby="dropdown02">
               <a class="dropdown-item" href="/usuarios">Listar Usuarios</a>
-              <a class="dropdown-item" href="usuarios/guardar">Nuevo Usuario</a>
+              <a class="dropdown-item" href="/usuarios/guardar">Nuevo Usuario</a>
         </li>
     </ul>
 

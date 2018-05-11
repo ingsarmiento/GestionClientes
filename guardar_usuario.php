@@ -142,7 +142,7 @@ include('libs/footer.php');
         }
         
 
-        $.post("libs/user_management.php?action=saveUser&username="+username+"&password="+password
+        $.post("/libs/user_management.php?action=saveUser&username="+username+"&password="+password
         +"&dni="+dni+"&nombre="+nombre+"&apellido="+apellido+"&direccion="+direccion+"&provincia="+provincia
         +"&poblacion="+poblacion+"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email
         +"&admin="+admin, function(response)

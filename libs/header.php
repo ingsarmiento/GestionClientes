@@ -27,6 +27,9 @@
 
     <link href="../assets/css/app.css" rel="stylesheet">
 
+     <script type="text/javascript" src="../assets/js/jquery.simplePagination.js"></script>
+     <script type="text/javascript" src="../assets/css/simplePagination.css"></script>
+
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">

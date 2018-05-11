@@ -24,7 +24,7 @@
             }
             if($_REQUEST['filter'] == "1" && $filter != "") 
             {
-                $resultset = $clientModel->getRow("Select * from clientes where dni=?",$filter);
+                $resultset = $clientModel->getRow("Select * from clientes where dni=?","{$filter}");
             }
             if($_REQUEST['filter'] == "2" && $filter != "")
             {

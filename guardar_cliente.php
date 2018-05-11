@@ -99,7 +99,6 @@ include('libs/footer.php');
     //Guardar Cliente
     $("#saveButton").click(function()
     {
-
         var dni = $("#inputDni").val();
         var nombre = $("#inputNombre").val();
         var apellido = $("#inputApellido").val();
@@ -111,25 +110,25 @@ include('libs/footer.php');
         var telefono = $("#inputTelefono").val();
         var email = $("#inputEmail").val();
 
-        $.post("libs/client_management.php?action=saveUser"+"&dni="+dni+"&nombre="+nombre
+        $.post("/libs/client_management.php?action=saveClient"+"&dni="+dni+"&nombre="+nombre
         +"&apellido="+apellido+"&direccion="+direccion+"&provincia="+provincia+"&poblacion="+poblacion
         +"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email,
-        function(response)
-        {
-            console.log(response);
-            var mensaje = $("#message");
-            var notification = $("#notification");
-            var resultado = JSON.parse(response);
+            function(response)
+            {
+                var mensaje = $("#message");
+                var notification = $("#notification");
+                var resultado = JSON.parse(response);
 
-            if(resultado.success)
-            {
-                notification.addClass("alert alert-success");
+                if(resultado.success)
+                {
+                    notification.addClass("alert alert-success");
+                }
+                else if(resultado.success == null || !resultado.success)
+                {
+                    notification.addClass("alert alert-danger");
+                }
+                mensaje.html(resultado.mensaje); 
             }
-            else if(resultado.success == null || !resultado.success)
-            {
-                notification.addClass("alert alert-danger");
-            }
-            mensaje.html(resultado.mensaje); 
-        });
+        );
     });
 </script>

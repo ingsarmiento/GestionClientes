@@ -77,10 +77,6 @@ include('libs/header.php');
                 </tbody>
             <table/>
         </div>
-        
-        <div>
-        <ul id="pagination" class="pagination-sm"></ul>
-        </div>
     </div>
 
 <?php
@@ -114,10 +110,11 @@ include('libs/footer.php');
         tBody.empty();
         var jsonResponse = JSON.parse(response); 
         var rows = jsonResponse.length;
-        
+        var mod = rows%10;
+
         if( rows >= 10)
         {
-            mod = rows%10;
+            
             if(mod > 0 && mod < 4)
             {
                 pages = Math.round(rows/10) + 1;
@@ -131,46 +128,87 @@ include('libs/footer.php');
         {
             pages = 1;
         }
-        var content = [];
+
+        var contents[];
         if(pages > 1)
         {
-            var i = 0;
-            jsonResponse.foreach
-            (
-                function(element)
-                {
-                    content.push(element);
-                    i++;
-                    if(i == 10)
-                    {
-                        showColumns(JSON.parse(content)); // Dividir en grupos de 10, Mostrar primer grupo, los demas grupos los debe mostrar el panel de paginación.
-                    }
-                }
-            );
+            contents = setContent(jsonResponse, pages);
         }
         else
         {
-            showColumns(jsonResponse);
-        }
+            /*contents = setContent(jsonResponse, pages);
+            if(contents[0].length > 1)
+            {
+                showColumns(jsonResponse);
+            }
+            else if(contents[0].length == 1)
+            {
+                if(typeof(jsonResponse) == 'object')
+                {
+                    showColumns(jsonResponse);
+                }
+                else
+                {
+                    showColumns(jsonResponse[0]);
+                }
+            }*/
 
-        
+            if(jsonResponse.length > 1)
+            {
+                showColumns(jsonResponse);
+            } 
+            else
+            {
+                if(typeof(jsonResponse) == 'object')
+                {
+                    showColumns(jsonResponse);
+                }
+                else
+                {
+                    showColumns(jsonResponse[0]);
+                }
+            }  
+            
+        }
       });
     });
 
-    $('#pagination').twbsPagination({
-        totalPages: pages,
-        visiblePages: 5,
-        onPageClick: function (event, page) {
-            //$('#page-content').text('Page ' + page);
-        }
-    });
+    /**
+     * Establecemos todo el contenido de la tabla separado en grupos de 10.
+     * Cada grupo representa una pagina. El ultimo elemento puede contener 10 o menos filas.
+     * @param response Respuesta a la petición de datos de usuarios.
+     * @param pages Numero de páginas a mostrar en la tabla.
+     * @return un array con todo el contenido de la tabla, agrupado en filas de 10 elementos.  
+     */
+    function setContent(response, pages)
+    {
+        var content = [];
+        var contents = [];
+        response.forEach
+        (
+            function(element)
+            {
+                /**
+                * Si el Array Content tiene 10 elementos o el número de elementos del array principal contents
+                *  es igual al numero de paginas - 1, se ha agrega content al array principal contents.
+                */
+                content.push(element);
+                if(content.length == 10 || (contents.length == (pages - 1)))
+                {
+                    //showColumns(JSON.parse(content)); // Dividir en grupos de 10, Mostrar primer grupo, los demas grupos los debe mostrar el panel de paginación.
+                    contents.push(content);
+                    content = [];
+                }
+            }
+        );
+
+        return contents;
+    }
 
     function showColumns(data)
     {
         if(data != null)
         {
-            //var users = JSON.parse(data); 
-            
             if(Array.isArray(data) && data.length > 0)
             {
                 data.forEach(function(element)
@@ -188,26 +226,26 @@ include('libs/footer.php');
 
     function showColumn(element)
     {
-      if(element != null)
-      {
-        tBody.append('<tr id="'+element.id+'">');
-        tBody.append('<td scope="row" id="dni'+element.id+'">'+element.dni+'</td>');
-        tBody.append('<tdscope="row" id="nombre'+element.id+'">'+element.nombre+'</td>');
-        tBody.append('<td scope="row" id="apellido'+element.id+'">'+element.apellido+'</td>');
-        tBody.append('<td scope="row" id="direccion'+element.id+'">'+element.direccion+'</td>');
-        tBody.append('<td scope="row" id="provincia'+element.id+'">'+element.provincia+'</td>');
-        tBody.append('<td scope="row" id="poblacion'+element.id+'">'+element.poblacion+'</td>');
-        tBody.append('<td scope="row" id="codigo_postal'+element.id+'">'+element.codigo_postal+'</td>');
-        tBody.append('<td scope="row" id="telefono'+element.id+'">'+element.telefono+'</td>');
-        tBody.append('<td scope="row" id="email'+element.id+'">'+element.email+'</td>');
-        tBody.append('<td scope="row" id="username'+element.id+'">'+element.username+'</td>');
-        tBody.append('<td scope="row" id="created_at'+element.id+'">'+element.created_at+'</td>');
-        tBody.append('<td scope="row"><button id="getUser'+element.id+'" onclick="getRow('+element.id+');"><i class="fas fa-eye"></i></button></td>');
-        tBody.append('<td scope="row"><button id="updateUser'+element.id+'" onclick="updateRow('+element.id+');" data-toggle="modal" data-target="#modificarUsuario"><i class="fas fa-edit"></i></button></td>');
-        tBody.append('<td scope="row"><button id="deleteUser'+element.id+'" onclick="deleteRow('+element.id+');" data-toggle="modal" data-target="#borrarUsuario"><i class="fas fa-trash-alt"></i></button></td>');
-        tBody.append('<td scope="row" id="admin'+element.id+'" style="visibility:hidden" >'+element.admin+'</td>');
-        tBody.append('</tr>');
-      }
+        if(element != null)
+        {
+            tBody.append('<tr id="'+element.id+'">');
+            tBody.append('<td scope="row" id="dni'+element.id+'">'+element.dni+'</td>');
+            tBody.append('<tdscope="row" id="nombre'+element.id+'">'+element.nombre+'</td>');
+            tBody.append('<td scope="row" id="apellido'+element.id+'">'+element.apellido+'</td>');
+            tBody.append('<td scope="row" id="direccion'+element.id+'">'+element.direccion+'</td>');
+            tBody.append('<td scope="row" id="provincia'+element.id+'">'+element.provincia+'</td>');
+            tBody.append('<td scope="row" id="poblacion'+element.id+'">'+element.poblacion+'</td>');
+            tBody.append('<td scope="row" id="codigo_postal'+element.id+'">'+element.codigo_postal+'</td>');
+            tBody.append('<td scope="row" id="telefono'+element.id+'">'+element.telefono+'</td>');
+            tBody.append('<td scope="row" id="email'+element.id+'">'+element.email+'</td>');
+            tBody.append('<td scope="row" id="username'+element.id+'">'+element.username+'</td>');
+            tBody.append('<td scope="row" id="created_at'+element.id+'">'+element.created_at+'</td>');
+            tBody.append('<td scope="row"><button id="getUser'+element.id+'" onclick="getRow('+element.id+');"><i class="fas fa-eye"></i></button></td>');
+            tBody.append('<td scope="row"><button id="updateUser'+element.id+'" onclick="updateRow('+element.id+');" data-toggle="modal" data-target="#modificarUsuario"><i class="fas fa-edit"></i></button></td>');
+            tBody.append('<td scope="row"><button id="deleteUser'+element.id+'" onclick="deleteRow('+element.id+');" data-toggle="modal" data-target="#borrarUsuario"><i class="fas fa-trash-alt"></i></button></td>');
+            tBody.append('<td scope="row" id="admin'+element.id+'" style="visibility:hidden" >'+element.admin+'</td>');
+            tBody.append('</tr>');
+        }
     }
 
     $("#modificarUsuario").submit(function(e)
@@ -291,6 +329,7 @@ include('libs/footer.php');
  
        $("#closeModal").click(function()
        {
+           $("#btnListar").trigger("click");
            $("#mensaje").empty();
        });
        

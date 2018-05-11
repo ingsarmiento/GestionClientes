@@ -84,7 +84,6 @@
 ?>
 
 <script>
-    
     //Listar Usuarios
     $('#clientFilterForm').submit(function(e)
     {
@@ -103,30 +102,85 @@
         {
             filtro = $('#filtro').val()
         }
-      $.post('libs/client_management.php?action=getClients&filter='+$('#filtrarPor option:selected').val()
-      +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val(),
-      function(response){
-        tBody.empty();
-        showColumns(response);
-      });
+
+        $.post("libs/client_management.php?action=getClients&filter="+$('#filtrarPor option:selected').val()
+        +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val(),
+        function(response)
+        {
+            tBody.empty();
+            var jsonResponse = JSON.parse(response); 
+            var rows = jsonResponse.length;
+            if( rows >= 10)
+            {
+                mod = rows%10;
+                if(mod > 0 && mod < 4)
+                {
+                    pages = Math.round(rows/10) + 1;
+                }
+                else
+                {
+                    pages = Math.round(rows/10);
+                }
+            } 
+            else
+            {
+                pages = 1;
+            }
+            var content = [];
+            if(pages > 1)
+            {
+                var i = 0;
+                jsonResponse.foreach
+                (
+                    function(element)
+                    {
+                        content.push(element);
+                        i++;
+                        if(i == 10)
+                        {
+                            showColumns(JSON.parse(content)); // Dividir en grupos de 10, Mostrar primer grupo, los demas grupos los debe mostrar el panel de paginación.
+                        }
+                    }
+                );
+            }
+            else
+            {
+                if(jsonResponse.length > 1)
+                {
+                    showColumns(jsonResponse);
+                } 
+                else
+                {
+                    if(typeof(jsonResponse) == 'object')
+                    {
+                        showColumns(jsonResponse);
+                    }
+                    else
+                    {
+                        showColumns(jsonResponse[0]);
+                    }
+
+                }  
+            }
+        });
     });
 
     function showColumns(data)
     {
         if(data != null)
         {
-            var clients = JSON.parse(data); 
+            //var clients = JSON.parse(data); 
             
-            if(Array.isArray(clients) && clients.length > 0)
+            if(Array.isArray(data) && data.length > 0)
             {
-                clients.forEach(function(element)
+                data.forEach(function(element)
                 {
                     showColumn(element);
                 });
             }
-            else if(typeof(clients) == 'object' && clients != null)
+            else if(typeof(data) == 'object' && data != null)
             {
-                showColumn(clients);
+                showColumn(data);
             }      
         }
         
@@ -155,11 +209,14 @@
       }
     }
 
-    $("#modificarUsuario").submit(function(e)
-    {
-        e.preventDefault();
-        return false;
-    });
+    $("#modificarCliente").submit
+    (
+        function(e)
+        {
+            e.preventDefault();
+            return false;
+        }
+    );
 
     function getRow(id)
     { 
@@ -213,7 +270,9 @@
  
        $("#closeModal").click(function()
        {
+           $("#btnListar").trigger("click");
            $("#mensaje").empty();
+           
        });
        
     }
@@ -224,7 +283,7 @@
         $("#btnEliminar").click(
             function()
             {
-                $.post('/libs/client_management.php?action=deleteUser&id='+id, 
+                $.post('/libs/client_management.php?action=deleteClient&id='+id, 
                     function(response)
                     {
                         if(response != null)
@@ -242,7 +301,7 @@
 
 </script>
 
-<!-- Modal -->
+<!-- Modal Modificar -->
 <div class="modal fade" id="modificarCliente" tabindex="-1" role="dialog" aria-labelledby="ModificarClienteTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -292,10 +351,8 @@
         </div>
     </div>
 </div>
-
+<!-- Fin Modal Modificar -->
 <!--Modal borrar-->
-
-<!-- Modal borrar -->
 <div class="modal" tabindex="-1" role="dialog" id="borrarCliente">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -315,3 +372,4 @@
     </div>
   </div>
 </div>
+<!-- Fin Modal borrar -->
