@@ -51,7 +51,7 @@ include('libs/header.php');
         <hr>
         <br>
         
-        <div class="table-responsive-sm">
+        <div class="table-responsive-sm d-none" id="resultTable">
             <table class='table table-sm table-bordered'>
                 <thead>
                     <tr>
@@ -77,6 +77,17 @@ include('libs/header.php');
                 </tbody>
             <table/>
         </div>
+
+        <div >
+            <div id="mensaje" class="d-flex justify-content-center">
+                <p id="mensajeConsulta"></p>
+            </div>
+            <div class="d-flex justify-content-center">
+                <ul id="pagination-users" class="pagination-sm pagination">
+                </ul>
+            </div>
+        </div>
+       
     </div>
 
 <?php
@@ -96,6 +107,7 @@ include('libs/footer.php');
     var tBody = $("#tbody");
     var pages = 0;
     var content;
+    var visible = 0;
     //evento click del boton listar.
     $("#btnListar").click(function()
     {
@@ -108,13 +120,26 @@ include('libs/footer.php');
       +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val(),
       function(response){
         tBody.empty();
+        if(response != null)
+        {
+            $("#resultTable").removeClass('d-none');
+        }
+        else
+        {
+            $("#resultTable").addClass('d-none');
+        }
+
         var jsonResponse = JSON.parse(response); 
-        var rows = jsonResponse.length;
+        var rows = 0;
+        if(jsonResponse != null)
+        {
+           rows = jsonResponse.length;
+        }
+        
         var mod = rows%10;
 
         if( rows >= 10)
         {
-            
             if(mod > 0 && mod < 4)
             {
                 pages = Math.round(rows/10) + 1;
@@ -124,34 +149,48 @@ include('libs/footer.php');
                 pages = Math.round(rows/10);
             }
         } 
-        else
+        else if(rows > 0 && rows < 9)
         {
             pages = 1;
         }
 
-        var contents[];
+        var contents = [];
         if(pages > 1)
         {
             contents = setContent(jsonResponse, pages);
-        }
-        else
-        {
-            /*contents = setContent(jsonResponse, pages);
-            if(contents[0].length > 1)
+            $('#pagination-users').append('<li class="page-item first disabled"><a href="#" class="page-link">Primero</a></li>');
+            $('#pagination-users').append('<li class="page-item prev disabled"><a href="#" class="page-link">Anterior</a></li>');
+            for(i=1; i<=pages; i++)
             {
-                showColumns(jsonResponse);
+                $('#pagination-users').append('<li class="page-item"><a href="#" class="page-link">'+i+'</a></li>');
+            }
+            $('#pagination-users').append('<li class="page-item next"><a href="#" class="page-link">Siguiente</a></li>');
+            $('#pagination-users').append('<li class="page-item last"><a href="#" class="page-link">Ultimo</a></li>');
+        }
+        else if(pages == 1)
+        {
+            contents = setContent(jsonResponse, pages);
+            $('#pagination-users').append('<li class="page-item first disabled"><a href="#" class="page-link">Primero</a></li>');
+            $('#pagination-users').append('<li class="page-item prev disabled"><a href="#" class="page-link">Anterior</a></li>');
+            $('#pagination-users').append('<li class="page-item disabled"><a href="#" class="page-link">1</a></li>');
+            $('#pagination-users').append('<li class="page-item next disabled"><a href="#" class="page-link">Siguiente</a></li>');
+            $('#pagination-users').append('<li class="page-item last disabled"><a href="#" class="page-link">Ultimo</a></li>');
+            
+            /*if(contents[0].length > 1)
+            {
+                //showColumns(jsonResponse);
             }
             else if(contents[0].length == 1)
             {
                 if(typeof(jsonResponse) == 'object')
                 {
-                    showColumns(jsonResponse);
+                    //showColumns(jsonResponse);
                 }
                 else
                 {
-                    showColumns(jsonResponse[0]);
+                    //showColumns(jsonResponse[0]);
                 }
-            }*/
+            }
 
             if(jsonResponse.length > 1)
             {
@@ -167,11 +206,43 @@ include('libs/footer.php');
                 {
                     showColumns(jsonResponse[0]);
                 }
-            }  
+            } */ 
             
         }
-      });
-    });
+
+        if(visible > 0)
+        {
+            //$('#mensajeConsulta').text('Mostrando resultados '+start+' a '+contents[0].length +' de '+ rows+);
+            
+            //Pagination 
+            $('#pagination-users').twbsPagination
+            (
+                {
+                    totalPages: pages,
+                    visiblePages: visible,
+                    onPageClick: function (event, page) 
+                    {
+                        start = 0;
+                        fin = 0;
+                        pag = page-1;
+                        start = fin + 1;
+                        fin = fin + contents[pag].length;
+                        $('#mensajeConsulta').text('Mostrando resultados '+start+' a '+ fin +' de '+ rows+' resultados. ');
+                        showColumns(contents[pag]);
+                    }
+                }
+            );
+        }
+        else
+        {
+            $('#mensajeConsulta').text('La consulta no ha devuelto resultados');
+        }
+      }
+    );
+    }
+);
+
+    
 
     /**
      * Establecemos todo el contenido de la tabla separado en grupos de 10.
@@ -184,23 +255,41 @@ include('libs/footer.php');
     {
         var content = [];
         var contents = [];
-        response.forEach
-        (
-            function(element)
-            {
-                /**
-                * Si el Array Content tiene 10 elementos o el número de elementos del array principal contents
-                *  es igual al numero de paginas - 1, se ha agrega content al array principal contents.
-                */
-                content.push(element);
-                if(content.length == 10 || (contents.length == (pages - 1)))
+        if(response != null)
+        {
+            response.forEach
+            (
+                function(element)
                 {
-                    //showColumns(JSON.parse(content)); // Dividir en grupos de 10, Mostrar primer grupo, los demas grupos los debe mostrar el panel de paginación.
-                    contents.push(content);
-                    content = [];
+                    /**
+                    * Si el Array Content tiene 10 elementos o el número de elementos del array principal contents
+                    *  es igual al numero de paginas - 1, se ha agrega content al array principal contents.
+                    */
+                    content.push(element);
+                    if(content.length == 10 || (pages == 1 && content.length == response.length) || (pages > 1 && contents.length == pages - 1 && content.length == mod))
+                    {
+                        //showColumns(JSON.parse(content)); // Dividir en grupos de 10, Mostrar primer grupo, los demas grupos los debe mostrar el panel de paginación.
+                        contents.push(content);
+                        content = [];
+                    }
                 }
-            }
-        );
+            );
+
+        }
+       
+
+        if(contents.lenght < 5)
+        {
+            visible = content.lenght;
+        }
+        else if(content.length >= 5)
+        {
+            visible = 5;
+        }
+        else if(content.length == 0)
+        {
+            visible = 0;
+        }
 
         return contents;
     }
@@ -356,6 +445,8 @@ include('libs/footer.php');
             }
         );
     }   
+
+
 </script>
 
 <!-- Sección Modificar -->
