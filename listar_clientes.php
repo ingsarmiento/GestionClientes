@@ -51,7 +51,7 @@
         <hr>
         <br>
         
-        <div class="table-responsive-sm">
+        <div class="table-responsive-sm" id="resultTable">
             <table class='table table-sm table-bordered'>
                 <thead>
                     <tr>
@@ -75,7 +75,17 @@
                 </tbody>
             <table/>
         </div>
-        
+
+        <div >
+            <div id="mensaje" class="d-flex justify-content-center">
+                <p id="mensajeConsulta"></p>
+            </div>
+            <div class="d-flex justify-content-center">
+                <ul id="pagination-clients" class="pagination-sm pagination">
+                </ul>
+            </div>
+        </div>
+
     </div>
 
 <?php
@@ -94,6 +104,15 @@
     var tBody = $("#tbody");
     var pages = 0;
     var content;
+    var visible = 0;
+    var jsonResponse; 
+    var rows = 0;
+    var mod = null;
+    var contents = [];
+    var start = 0;
+    var fin = 0;
+    var pag = 0;
+    var contentSize = 0;
     //evento click del boton listar.
     $("#btnListar").click(function()
     {
@@ -106,14 +125,41 @@
         $.post("libs/client_management.php?action=getClients&filter="+$('#filtrarPor option:selected').val()
         +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val(),
         function(response)
+      {
+        tBody.empty();
+        if(response)
         {
-            tBody.empty();
-            var jsonResponse = JSON.parse(response); 
-            var rows = jsonResponse.length;
-            if( rows >= 10)
+            jsonResponse = JSON.parse(response); 
+            if(jsonResponse != null)
             {
-                mod = rows%10;
-                if(mod > 0 && mod < 4)
+                if(jsonResponse.hasOwnProperty("length"))
+                {
+                    rows = jsonResponse.length;
+                }
+                else if(!jsonResponse.hasOwnProperty("length") && jsonResponse)
+                {
+                    rows = 1;
+                }
+                
+                $("#resultTable").removeClass('d-none');
+            }
+        }
+        else
+        {
+            $("#resultTable").addClass('d-none');
+        }
+        
+        
+        if(rows > 0)
+        {
+            mod = rows % 10;
+        }
+
+        if( rows >= 10)
+        {
+            if(mod != null)
+            {
+                 if(mod > 0 && mod < 4)
                 {
                     pages = Math.round(rows/10) + 1;
                 }
@@ -121,56 +167,151 @@
                 {
                     pages = Math.round(rows/10);
                 }
-            } 
-            else
-            {
-                pages = 1;
             }
-            var content = [];
-            if(pages > 1)
+           
+        } 
+        else if(rows > 0 && rows < 9)
+        {
+            pages = 1;
+        }
+
+        mensaje = $('#mensajeConsulta');
+        $('#pagination-clients').empty();
+        if(pages > 1)
+        {
+            contents = [];
+            contents = setContent(jsonResponse, pages);
+            contentSize = contents[0].length;
+            
+            showColumns(contents[0]);
+            start = 0;
+            fin = 0;
+            start = fin + 1;
+            fin = fin + contentSize;
+
+            $('#pagination-clients').append('<li class="page-item first disabled"><a href="#" class="page-link">Primero</a></li>');
+            $('#pagination-clients').append('<li class="page-item prev disabled"><a href="#" class="page-link">Anterior</a></li>');
+            for(i=1; i<=pages; i++)
             {
-                var i = 0;
-                jsonResponse.foreach
+                $('#pagination-clients').append('<li class="page-item"><a href="#" class="page-link">'+i+'</a></li>');
+            }
+            $('#pagination-clients').append('<li class="page-item next"><a href="#" class="page-link">Siguiente</a></li>');
+            $('#pagination-clients').append('<li class="page-item last"><a href="#" class="page-link">Ultimo</a></li>');
+            //mensaje.text('Mostrando resultados '+start+' a '+ fin +' de '+ rows +' resultados. ');
+        }
+        else if(pages == 1)
+        {
+            contents = [];
+            contents = setContent(jsonResponse, pages);
+            contentSize = contents[0].length;
+            showColumns(contents[0]);
+
+            start = 0;
+            /*fin = 0;
+            start = fin + 1;
+            fin = fin + contentSize;*/
+
+            $('#pagination-clients').append('<li class="page-item first disabled"><a href="#" class="page-link">Primero</a></li>');
+            $('#pagination-clients').append('<li class="page-item prev disabled"><a href="#" class="page-link">Anterior</a></li>');
+            $('#pagination-clients').append('<li class="page-item disabled"><a href="#" class="page-link">1</a></li>');
+            $('#pagination-clients').append('<li class="page-item next disabled"><a href="#" class="page-link">Siguiente</a></li>');
+            $('#pagination-clients').append('<li class="page-item last disabled"><a href="#" class="page-link">Ultimo</a></li>');
+            //mensaje.text('Mostrando resultados '+start+' a '+ fin +' de '+ rows +' resultados. ');
+        }
+        else
+        {
+            pages = 0;
+        }
+
+        
+        if(visible > 0)
+        {
+            //Pagination 
+            $('#pagination-clients').twbsPagination
+            (
+                {
+                    totalPages: pages,
+                    visiblePages: visible,
+                    onPageClick: function (event, page) 
+                    {
+                        pag = page-1;
+                        start = fin + 1;
+                        fin = fin + contents[pag].length;
+                        tBody.empty();
+                        //mensaje.text('Mostrando resultados '+start+' a '+ fin +' de '+ rows +' resultados. ');
+                        showColumns(contents[pag]);
+                    }
+                }
+            );
+        }
+        else
+        {
+            $("#resultTable").addClass('d-none');
+            mensaje.text('La consulta no ha devuelto resultados');
+        }
+      }
+    );
+    });
+
+    /**
+     * Establecemos todo el contenido de la tabla separado en grupos de 10.
+     * Cada grupo representa una pagina. El ultimo elemento puede contener 10 o menos filas.
+     * @param response Respuesta a la petición de datos de clientes.
+     * @param pages Numero de páginas a mostrar en la tabla.
+     * @return un array con todo el contenido de la tabla, agrupado en filas de 10 elementos.  
+     */
+    function setContent(response, pages)
+    {
+        var content = [];
+        if(response)
+        {
+            if(response.hasOwnProperty("length"))
+            {
+                 response.forEach
                 (
                     function(element)
                     {
+                        /**
+                        * Si el Array Content tiene 10 elementos o el número de elementos del array principal contents
+                        *  es igual al numero de paginas - 1, se ha agrega content al array principal contents.
+                        */
                         content.push(element);
-                        i++;
-                        if(i == 10)
+                        if(content.length == 10 || (pages == 1 && content.length == response.length) || (pages > 1 && contents.length == pages - 1 && content.length == mod))
                         {
-                            showColumns(JSON.parse(content)); // Dividir en grupos de 10, Mostrar primer grupo, los demas grupos los debe mostrar el panel de paginación.
+                            contents.push(content);
+                            content = [];
                         }
                     }
                 );
             }
             else
-            {
-                if(jsonResponse.length > 1)
-                {
-                    showColumns(jsonResponse);
-                } 
-                else
-                {
-                    if(typeof(jsonResponse) == 'object')
-                    {
-                        showColumns(jsonResponse);
-                    }
-                    else
-                    {
-                        showColumns(jsonResponse[0]);
-                    }
-
-                }  
+            { 
+                content.push(response);
+                contents.push(content);
+                content = [];
             }
-        });
-    });
+            
+            if(contents.length < 5)
+            {
+                visible = contents.length;
+            }
+            else if(contents.length >= 5)
+            {
+                visible = 5;
+            }
+            else if(contents.length == 0)
+            {
+                rows = 0;
+                visible = 0;
+            }
+        }
+        return contents;
+    }
 
     function showColumns(data)
     {
         if(data != null)
         {
-            //var clients = JSON.parse(data); 
-            
             if(Array.isArray(data) && data.length > 0)
             {
                 data.forEach(function(element)
@@ -183,7 +324,6 @@
                 showColumn(data);
             }      
         }
-        
     }
 
     function showColumn(element)
@@ -352,6 +492,7 @@
     </div>
 </div>
 <!-- Fin Modal Modificar -->
+
 <!--Modal borrar-->
 <div class="modal" tabindex="-1" role="dialog" id="borrarCliente">
   <div class="modal-dialog" role="document">

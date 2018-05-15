@@ -106,7 +106,7 @@ include('libs/footer.php');
     
     var tBody = $("#tbody");
     var pages = 0;
-    var content;
+    var content = [];
     var visible = 0;
     var jsonResponse; 
     var rows = 0;
@@ -115,7 +115,7 @@ include('libs/footer.php');
     var start = 0;
     var fin = 0;
     var pag = 0;
-    contentSize = 0;
+    var contentSize = 0;
 
     //evento click del boton listar.
     $("#btnListar").click(function()
@@ -221,37 +221,6 @@ include('libs/footer.php');
             $('#pagination-users').append('<li class="page-item next disabled"><a href="#" class="page-link">Siguiente</a></li>');
             $('#pagination-users').append('<li class="page-item last disabled"><a href="#" class="page-link">Ultimo</a></li>');
             //mensaje.text('Mostrando resultados '+start+' a '+ fin +' de '+ rows +' resultados. ');
-            /*if(contents[0].length > 1)
-            {
-                //showColumns(jsonResponse);
-            }
-            else if(contents[0].length == 1)
-            {
-                if(typeof(jsonResponse) == 'object')
-                {
-                    //showColumns(jsonResponse);
-                }
-                else
-                {
-                    //showColumns(jsonResponse[0]);
-                }
-            }
-
-            if(jsonResponse.length > 1)
-            {
-                showColumns(jsonResponse);
-            } 
-            else
-            {
-                if(typeof(jsonResponse) == 'object')
-                {
-                    showColumns(jsonResponse);
-                }
-                else
-                {
-                    showColumns(jsonResponse[0]);
-                }
-            } */ 
         }
         else
         {
@@ -360,7 +329,6 @@ include('libs/footer.php');
                 showColumn(data);
             }      
         }
-        
     }
 
     function showColumn(element)
@@ -499,7 +467,6 @@ include('libs/footer.php');
 
 </script>
 
-<!-- Sección Modificar -->
 <!-- Modal Modificar -->
 <div class="modal fade" id="modificarUsuario" tabindex="-1" role="dialog" aria-labelledby="modificarUsuarioTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -558,7 +525,7 @@ include('libs/footer.php');
         </div>
     </div>
 </div>
-
+<!-- Fin Modal Modificar -->
 
 <!-- Modal borrar -->
 <div class="modal" tabindex="-1" role="dialog" id="borrarUsuario">
@@ -580,3 +547,4 @@ include('libs/footer.php');
     </div>
   </div>
 </div>
+<!-- Fin Modal Borrar -->
