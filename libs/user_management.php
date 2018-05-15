@@ -34,11 +34,8 @@
             {
                 $resultset = $userModel->getRows("Select * from usuarios where apellido like ? order by {$order}","%{$filter}%");
             }
-            
-            if($resultset != null)
-            {
-              echo $resultset;      
-            }
+
+            echo $resultset;      
 
         break;
 

@@ -108,56 +108,91 @@ include('libs/footer.php');
     var pages = 0;
     var content;
     var visible = 0;
+    var jsonResponse; 
+    var rows = 0;
+    var mod = null;
+    var contents = [];
+    var start = 0;
+    var fin = 0;
+    var pag = 0;
+    contentSize = 0;
+
     //evento click del boton listar.
     $("#btnListar").click(function()
     {
-        var filtro = '';
-        if($('#filtro').val() != '')
+        var filtro = "";
+        if($('#filtro').val() != "")
         {
             filtro = $('#filtro').val()
         }
+
       $.post('libs/user_management.php?action=getUsers&filter='+$('#filtrarPor option:selected').val()
       +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val(),
-      function(response){
+      function(response)
+      {
         tBody.empty();
-        if(response != null)
+        if(response)
         {
-            $("#resultTable").removeClass('d-none');
+            jsonResponse = JSON.parse(response); 
+            if(jsonResponse != null)
+            {
+                if(jsonResponse.hasOwnProperty("length"))
+                {
+                    rows = jsonResponse.length;
+                }
+                else if(!jsonResponse.hasOwnProperty("length") && jsonResponse)
+                {
+                    rows = 1;
+                }
+                
+                $("#resultTable").removeClass('d-none');
+            }
         }
         else
         {
             $("#resultTable").addClass('d-none');
         }
-
-        var jsonResponse = JSON.parse(response); 
-        var rows = 0;
-        if(jsonResponse != null)
-        {
-           rows = jsonResponse.length;
-        }
         
-        var mod = rows%10;
+        
+        if(rows > 0)
+        {
+            mod = rows % 10;
+        }
 
         if( rows >= 10)
         {
-            if(mod > 0 && mod < 4)
+            if(mod != null)
             {
-                pages = Math.round(rows/10) + 1;
+                 if(mod > 0 && mod < 4)
+                {
+                    pages = Math.round(rows/10) + 1;
+                }
+                else
+                {
+                    pages = Math.round(rows/10);
+                }
             }
-            else
-            {
-                pages = Math.round(rows/10);
-            }
+           
         } 
         else if(rows > 0 && rows < 9)
         {
             pages = 1;
         }
 
-        var contents = [];
+        mensaje = $('#mensajeConsulta');
+        $('#pagination-users').empty();
         if(pages > 1)
         {
+            contents = [];
             contents = setContent(jsonResponse, pages);
+            contentSize = contents[0].length;
+            
+            showColumns(contents[0]);
+            start = 0;
+            fin = 0;
+            start = fin + 1;
+            fin = fin + contentSize;
+
             $('#pagination-users').append('<li class="page-item first disabled"><a href="#" class="page-link">Primero</a></li>');
             $('#pagination-users').append('<li class="page-item prev disabled"><a href="#" class="page-link">Anterior</a></li>');
             for(i=1; i<=pages; i++)
@@ -166,16 +201,26 @@ include('libs/footer.php');
             }
             $('#pagination-users').append('<li class="page-item next"><a href="#" class="page-link">Siguiente</a></li>');
             $('#pagination-users').append('<li class="page-item last"><a href="#" class="page-link">Ultimo</a></li>');
+            //mensaje.text('Mostrando resultados '+start+' a '+ fin +' de '+ rows +' resultados. ');
         }
         else if(pages == 1)
         {
+            contents = [];
             contents = setContent(jsonResponse, pages);
+            contentSize = contents[0].length;
+            showColumns(contents[0]);
+
+            start = 0;
+            /*fin = 0;
+            start = fin + 1;
+            fin = fin + contentSize;*/
+
             $('#pagination-users').append('<li class="page-item first disabled"><a href="#" class="page-link">Primero</a></li>');
             $('#pagination-users').append('<li class="page-item prev disabled"><a href="#" class="page-link">Anterior</a></li>');
             $('#pagination-users').append('<li class="page-item disabled"><a href="#" class="page-link">1</a></li>');
             $('#pagination-users').append('<li class="page-item next disabled"><a href="#" class="page-link">Siguiente</a></li>');
             $('#pagination-users').append('<li class="page-item last disabled"><a href="#" class="page-link">Ultimo</a></li>');
-            
+            //mensaje.text('Mostrando resultados '+start+' a '+ fin +' de '+ rows +' resultados. ');
             /*if(contents[0].length > 1)
             {
                 //showColumns(jsonResponse);
@@ -207,13 +252,15 @@ include('libs/footer.php');
                     showColumns(jsonResponse[0]);
                 }
             } */ 
-            
+        }
+        else
+        {
+            pages = 0;
         }
 
+        
         if(visible > 0)
         {
-            //$('#mensajeConsulta').text('Mostrando resultados '+start+' a '+contents[0].length +' de '+ rows+);
-            
             //Pagination 
             $('#pagination-users').twbsPagination
             (
@@ -222,12 +269,11 @@ include('libs/footer.php');
                     visiblePages: visible,
                     onPageClick: function (event, page) 
                     {
-                        start = 0;
-                        fin = 0;
                         pag = page-1;
                         start = fin + 1;
                         fin = fin + contents[pag].length;
-                        $('#mensajeConsulta').text('Mostrando resultados '+start+' a '+ fin +' de '+ rows+' resultados. ');
+                        tBody.empty();
+                        //mensaje.text('Mostrando resultados '+start+' a '+ fin +' de '+ rows +' resultados. ');
                         showColumns(contents[pag]);
                     }
                 }
@@ -235,14 +281,13 @@ include('libs/footer.php');
         }
         else
         {
-            $('#mensajeConsulta').text('La consulta no ha devuelto resultados');
+            $("#resultTable").addClass('d-none');
+            mensaje.text('La consulta no ha devuelto resultados');
         }
       }
     );
     }
 );
-
-    
 
     /**
      * Establecemos todo el contenido de la tabla separado en grupos de 10.
@@ -254,43 +299,48 @@ include('libs/footer.php');
     function setContent(response, pages)
     {
         var content = [];
-        var contents = [];
-        if(response != null)
+        if(response)
         {
-            response.forEach
-            (
-                function(element)
-                {
-                    /**
-                    * Si el Array Content tiene 10 elementos o el número de elementos del array principal contents
-                    *  es igual al numero de paginas - 1, se ha agrega content al array principal contents.
-                    */
-                    content.push(element);
-                    if(content.length == 10 || (pages == 1 && content.length == response.length) || (pages > 1 && contents.length == pages - 1 && content.length == mod))
+            if(response.hasOwnProperty("length"))
+            {
+                 response.forEach
+                (
+                    function(element)
                     {
-                        //showColumns(JSON.parse(content)); // Dividir en grupos de 10, Mostrar primer grupo, los demas grupos los debe mostrar el panel de paginación.
-                        contents.push(content);
-                        content = [];
+                        /**
+                        * Si el Array Content tiene 10 elementos o el número de elementos del array principal contents
+                        *  es igual al numero de paginas - 1, se ha agrega content al array principal contents.
+                        */
+                        content.push(element);
+                        if(content.length == 10 || (pages == 1 && content.length == response.length) || (pages > 1 && contents.length == pages - 1 && content.length == mod))
+                        {
+                            contents.push(content);
+                            content = [];
+                        }
                     }
-                }
-            );
-
+                );
+            }
+            else
+            { 
+                content.push(response);
+                contents.push(content);
+                content = [];
+            }
+            
+            if(contents.length < 5)
+            {
+                visible = contents.length;
+            }
+            else if(contents.length >= 5)
+            {
+                visible = 5;
+            }
+            else if(contents.length == 0)
+            {
+                rows = 0;
+                visible = 0;
+            }
         }
-       
-
-        if(contents.lenght < 5)
-        {
-            visible = content.lenght;
-        }
-        else if(content.length >= 5)
-        {
-            visible = 5;
-        }
-        else if(content.length == 0)
-        {
-            visible = 0;
-        }
-
         return contents;
     }
 
@@ -305,7 +355,7 @@ include('libs/footer.php');
                     showColumn(element);
                 });
             }
-            else if(typeof(data) == 'object' && data != null)
+            else if(typeof(data) == 'object')
             {
                 showColumn(data);
             }      
