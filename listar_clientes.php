@@ -5,87 +5,97 @@
     <!-- Custom styles for this template -->
     <link href="../assets/css/app.css" rel="stylesheet">
     <div class="container">
-        <div class="card border-info bg-info mb-3 text-center" style="width:50rem;">
-            <div class="card-header">
-                <h5 class="card-title text-center">Filtrar Clientes</h5>
-            </div>
-            <div class="card-body">
-                <fieldset id='fieldset_listar_usuarios' class="text-center">
-                    <form id='clientFilterForm'>
-                        <div class="form-group row">
-                            <label for="filtrarPor" class="col-sm-2 col-form-label">Filtrar</label>
-                            <div class="col-sm-3">
-                                <select id='filtrarPor' class='form-control'>
-                                    <option value="0">Todos</option>
-                                    <option value="1">Por dni</option>
-                                    <option value="2">Por nombre</option>
-                                    <option value="3">Por apellido</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" id="filtro" name="filtro">
-                            </div>
-                        </div>
+    <div class="row">
+            <div class="col-sm-12">
 
-                        <div class="form-group row">
-                            <label for="orderBy" class="col-sm-2 col-form-label">Ordenar por</label>
-                            <div class="col-sm-3">
-                                <select id='ordenarPor' class='form-control'>
-                                    <option value="dni">Por dni</option>
-                                    <option value="created_at">Por fecha de alta</option>
-                                    <option value="nombre">Por nombre</option>
-                                    <option value="apellido">Por apellido</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <button type="submit" class="form-control btn btn-primary col-sm-2" id='btnListar'>Listar</button>
-                        </div>
-                    </form>
-                </fieldset>
+                <div class="card border-info bg-info col-md-10 offset-1">
+                    <div class="card-header">
+                        <h5 class="card-title text-center text-white">Filtrar Clientes</h5>
+                    </div>
+                    <div class="card-body">
+                        <fieldset id='fieldset_listar_usuarios' class="text-center">
+                            <form id='clientFilterForm'>
+                                <div class="form-group row">
+                                    <label for="filtrarPor" class="col-sm-2 col-form-label">Filtrar</label>
+                                    <div class="col-sm-3">
+                                        <select id='filtrarPor' class='form-control'>
+                                            <option value="0">Todos</option>
+                                            <option value="1">Por dni</option>
+                                            <option value="2">Por nombre</option>
+                                            <option value="3">Por apellido</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="filtro" name="filtro">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="orderBy" class="col-sm-2 col-form-label">Ordenar por</label>
+                                    <div class="col-sm-3">
+                                        <select id='ordenarPor' class='form-control'>
+                                            <option value="dni">Por dni</option>
+                                            <option value="created_at">Por fecha de alta</option>
+                                            <option value="nombre">Por nombre</option>
+                                            <option value="apellido">Por apellido</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select id='orderType' class='form-control'>
+                                            <option value="asc">Ascendente</option>
+                                            <option value="desc">Descendente</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" class="form-control btn btn-primary col-sm-1" id='btnListar'>Listar</button>
+                                </div>
+                            </form>
+                        </fieldset>
+                        
+                    </div>
+                </div>
                 
-            </div>
-        </div>
-        
-        <br>
-        <hr>
-        <br>
-        
-        <div class="table-responsive-sm" id="resultTable">
-            <table class='table table-sm table-bordered'>
-                <thead>
-                    <tr>
-                        <th scope='col'> DNI</th>
-                        <th scope='col'> NOMBRE</th>
-                        <th scope='col'> APELLIDO</th>
-                        <th scope='col'> DIRECCIÓN</th>
-                        <th scope='col'> PROVINCIA</th>
-                        <th scope='col'> POBLACIÓN</th>
-                        <th scope='col'> CÓDIGO POSTAL</th>
-                        <th scope='col'> TÉLEFONO </th> 
-                        <th scope='col'> EMAIL </th>
-                        <th scope='col'> FECHA DE ALTA</th>
-                        <th scope='col'> </th>
-                        <th scope='col'> </th>
-                        <th scope='col'> </th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                    
-                </tbody>
-            <table/>
-        </div>
+                <br>
+                <hr>
+                <br>
+                
+                <div class="table-responsive-sm" id="resultTable">
+                    <table class='table table-sm table-bordered'>
+                        <thead>
+                            <tr>
+                                <th scope='col'> DNI</th>
+                                <th scope='col'> NOMBRE</th>
+                                <th scope='col'> APELLIDO</th>
+                                <th scope='col'> DIRECCIÓN</th>
+                                <th scope='col'> PROVINCIA</th>
+                                <th scope='col'> POBLACIÓN</th>
+                                <th scope='col'> CÓDIGO POSTAL</th>
+                                <th scope='col'> TÉLEFONO </th> 
+                                <th scope='col'> EMAIL </th>
+                                <th scope='col'> FECHA DE ALTA</th>
+                                <th scope='col'> </th>
+                                <th scope='col'> </th>
+                                <th scope='col'> </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            
+                        </tbody>
+                    <table/>
+                </div>
 
-        <div >
-            <div id="mensaje" class="d-flex justify-content-center">
-                <p id="mensajeConsulta"></p>
-            </div>
-            <div class="d-flex justify-content-center">
-                <ul id="pagination-clients" class="pagination-sm pagination">
-                </ul>
-            </div>
+                <div >
+                    <div id="mensaje" class="d-flex justify-content-center">
+                        <p id="mensajeConsulta"></p>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <ul id="pagination-clients" class="pagination-sm pagination">
+                        </ul>
+                    </div>
+                </div>
+            </div>        
         </div>
-
     </div>
 
 <?php
@@ -123,7 +133,7 @@
         }
 
         $.post("libs/client_management.php?action=getClients&filter="+$('#filtrarPor option:selected').val()
-        +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val(),
+        +'&value='+filtro+'&order='+$('#ordenarPor option:selected').val()+" "+$("#orderType option:selected").val(),
         function(response)
       {
         tBody.empty();
@@ -332,19 +342,19 @@
       {
         var id = element.id;
         tBody.append('<tr id='+id+'>');
-        tBody.append('<td id="dni'+id+'">'+element.dni+'</td>');
-        tBody.append('<td id="nombre'+id+'">'+element.nombre+'</td>');
-        tBody.append('<td id="apellido'+id+'">'+element.apellido+'</td>');
-        tBody.append('<td id="direccion'+id+'">'+element.direccion+'</td>');
-        tBody.append('<td id="provincia'+id+'">'+element.provincia+'</td>');
-        tBody.append('<td id="poblacion'+id+'">'+element.poblacion+'</td>');
-        tBody.append('<td id="codigo_postal'+id+'">'+element.codigo_postal+'</td>');
-        tBody.append('<td id="telefono'+id+'">'+element.telefono+'</td>');
-        tBody.append('<td id="email'+id+'">'+element.email+'</td>');
-        tBody.append('<td id="created_at'+id+'">'+element.created_at+'</td>');
+        tBody.append('<td scope="row" id="dni'+id+'">'+element.dni+'</td>');
+        tBody.append('<td scope="row" id="nombre'+id+'">'+element.nombre+'</td>');
+        tBody.append('<td scope="row" id="apellido'+id+'">'+element.apellido+'</td>');
+        tBody.append('<td scope="row" id="direccion'+id+'">'+element.direccion+'</td>');
+        tBody.append('<td scope="row" id="provincia'+id+'">'+element.provincia+'</td>');
+        tBody.append('<td scope="row" id="poblacion'+id+'">'+element.poblacion+'</td>');
+        tBody.append('<td scope="row" id="codigo_postal'+id+'">'+element.codigo_postal+'</td>');
+        tBody.append('<td scope="row" id="telefono'+id+'">'+element.telefono+'</td>');
+        tBody.append('<td scope="row" id="email'+id+'">'+element.email+'</td>');
+        tBody.append('<td scope="row" id="created_at'+id+'">'+new Date(element.created_at).toLocaleDateString("es-ES")+'</td>');
         tBody.append('<td scope="row"><button id="btnGet'+id+'" onclick="getRow('+element.id+');"><i class="fas fa-eye"></i></button></td>');
         tBody.append('<td scope="row"><button id="btnUpdate'+id+'" onclick="updateRow('+id+');" data-toggle="modal" data-target="#modificarCliente"><i class="fas fa-edit"></i></button></td>');
-        tBody.append('<td scope="row"><button id="btnDelete'+id+'" onclick="deleteRow('+id+');" data-toggle="modal" data-target="#borrarCliente"><i class="fas fa-trash-alt"></i></button></td>');
+        tBody.append('<td><button id="btnDelete'+id+'" onclick="deleteRow('+id+');" data-toggle="modal" data-target="#borrarCliente"><i class="fas fa-trash-alt"></i></button></td>');
         tBody.append('</tr>');
       }
     }

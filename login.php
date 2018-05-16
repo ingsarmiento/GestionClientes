@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -17,7 +17,7 @@
   </head>
 
   <body class="text-center">
-    <form class="form-signin" action='/libs/login_management.php' method='POST'>
+    <form class="form-signin">
       <img class="mb-4" src="/assets/img/logo.jpg" alt="" width='300' heigth='300'>
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
@@ -29,7 +29,34 @@
           <input type="checkbox" value="remember-me"> Recordar Usuario
         </label>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" id='btnLogin'>Entrar</button>
     </form>
   </body>
 </html>
+
+<script>
+
+  $('#btnLogin').click(
+
+    function()
+    {
+      $.post('/libs/login_management.php?action=login&email='+$('#inputEmail').text()+'&password='+$('#inputPassword').text(),
+        function(response)
+        {
+          if(response)
+          {
+            if(response == 'autorizado')
+            {
+              <?php
+                session_start();
+                header("location:http://localhost:8080");
+              ?>
+            }
+          }
+        }
+      );
+    }
+
+  );
+
+</script>

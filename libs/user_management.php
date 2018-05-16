@@ -132,5 +132,20 @@
                 }
             }
         break;
+
+        case 'changePassword':
+            if(isset($_POST))
+            {
+                $currentPassword = $_REQUEST['current_password'];
+                $newPassword = $_REQUEST['new_password'];
+                $confirmPassword = $_REQUEST['confirm_password'];
+
+                //Verificacion de la contraseña actual.
+                $resultset = $userModel->getRow('select * from usuarios where username=?', $username);
+                
+
+
+            }
+        break;
     }
 ?>

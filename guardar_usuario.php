@@ -48,7 +48,7 @@ include('libs/header.php');
                 </div>
 
                 <div class="form-group row">
-                    <label for="inputDireccion" class="col-sm-2 col-form-label">direccion</label>
+                    <label for="inputDireccion" class="col-sm-2 col-form-label">Dirección</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="inputDireccion" name="inputDireccion" placeholder="Dirección">
                     </div>

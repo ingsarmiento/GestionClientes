@@ -1,4 +1,5 @@
 <?php
+session_start();
     $request_uri = explode('?',$_SERVER['REQUEST_URI'],2);
     $accessDenied = 'No tiene permiso para entrar a esta página';
     switch($request_uri[0])
@@ -15,49 +16,58 @@
             break;
 
         case '/usuarios':
-            //if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
+            if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
                 require 'listar_usuarios.php';
-            /*}else
+            }else
             {
                 echo $accessDenied;
-            }*/
+            }
             break;
 
         case '/usuarios/guardar':
-            //if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
+            if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin'])
+            {
                 require 'guardar_usuario.php';
-            /*}else
+            }
+            else
             {
                 echo $accessDenied;
-            }*/
+            }
             break;
 
-        case '/usuarios/cambiar_contrasenia':
-            //if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
+        case '/usuarios/change_password':
+            if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin'])
+            {
                 require 'change_password.php';
-            /*}else
+            }
+            else
             {
                 echo $accessDenied;
-            }*/
+            }
             break;
 
         case '/clientes':
-            //if(isset($_SESSION) && $_SESSION['loggedin']){
+            if(isset($_SESSION) && $_SESSION['loggedin'])
+            {
                 require 'listar_clientes.php';
-            //}else
-            //{
-                //echo $accessDenied;
-            //}
+            }
+            else
+            {
+                echo $accessDenied;
+            }
             break;
 
             case '/clientes/guardar':
-            //if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
+            if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin'])
+            {
                 require 'guardar_cliente.php';
-            /*}else
+            }
+            else
             {
                 echo $accessDenied;
-            }*/
+            }
             break;
+
             default:
                 header('HTTP/1.0 404 Not Found');
             require 'views/404.php';

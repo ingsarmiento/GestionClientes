@@ -8,10 +8,10 @@ include('libs/header.php');
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="container">
-          <h1 class="display-3">Bienvenido Nombre<?php  //if(isset($_SESSION)) echo $_SESSION['nombre']; ?></h1>
+          <h1 class="display-3">Bienvenido <?php //if(isset($_SESSION)) echo $_SESSION['nombre']; ?></h1>
           
           <?php
-          
+
             /*if(isset($_SESSION) && $_SESSION['loggedin'])
             {  
               if($_SESSION['admin'])

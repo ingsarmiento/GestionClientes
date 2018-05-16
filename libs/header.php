@@ -1,11 +1,12 @@
     <?php
-    /*if(isset($_SESSION)){
+    /*session_start();
+    if(isset($_SESSION)){
       $now = time();
       if($now = $_SESSION['expire'])
       {
         session_unset();
         session_destroy();
-        header("Localhost:http://localhost:3000/login");
+        header("Localhost:http://localhost:8080/login");
       }
     }*/
     ?>
@@ -37,8 +38,10 @@
       </button>
       
       <?php 
-        //if(isset($_SESSION)){
+        session_start();
+        if(isset($_SESSION))
+        {
           include('nav_elements.php');
-        //}
+        }
       ?>
     </nav>

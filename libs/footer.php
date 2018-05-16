@@ -1,4 +1,4 @@
-<footer class="container fixed-botton">
+<footer class="fixed-botton">
       <p>&copy; Company 2017-2018</p>
 </footer>
     <!-- Bootstrap core JavaScript

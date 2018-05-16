@@ -28,7 +28,7 @@
             <div class="dropdown-menu" aria-labelledby="dropdown03">
               <a class="dropdown-item"><?php //if(isset($_SESSION)) echo $_SESSION['nombre']; ?></a>
               <a class="dropdown-item" role="divider"></a>
-              <a class="dropdown-item" href="/usuarios/cambiar_contrasenia">Cambiar contraseña</a>
+              <a class="dropdown-item" href="/usuarios/change_password">Cambiar contraseña</a>
               <a class="dropdown-item" href="/logout">Cerrar Sesión</a>
             </div>
         </li>
