@@ -40,7 +40,7 @@
         break;
 
         case 'getUser':
-                $resulset = null;
+                $resultset = null;
                 if(isset($_GET))
                 {
                     $resultset = $userModel->getRow("Select username, dni, nombre, apellido, direccion, provincia, poblacion, codigo_postal, telefono, email, admin from usuarios where id=?",$_REQUEST['id']);
@@ -136,15 +136,41 @@
         case 'changePassword':
             if(isset($_POST))
             {
+                session_start();
+                $username = $_SESSION['username'];
                 $currentPassword = $_REQUEST['current_password'];
                 $newPassword = $_REQUEST['new_password'];
                 $confirmPassword = $_REQUEST['confirm_password'];
 
                 //Verificacion de la contraseña actual.
                 $resultset = $userModel->getRow('select * from usuarios where username=?', $username);
-                
-
-
+                if($resultset != null && $resultset)
+                {
+                    $resultObject = json_decode($resultset);
+                    $id = $resultObject->id;
+                    $password = $resultObject->password;
+                    if($password == $currentPassword)
+                    {
+                        if($newPassword == $confirmPassword)
+                        {
+                            $userModel->setId($id);
+                            $userModel->password = $newPassword;
+                            $modificado = $userModel->modificar();
+                            if(is_null($modificado) && $modificado)
+                            { 
+                                echo json_encode(array("mensaje"=>"La contraseña ha sido cambiada con exito!","success"=>$modificado));
+                            }
+                            else
+                            {
+                                echo json_encode(array("mensaje"=>"Ha habido un error, no se ha podido actualizar la contraseña","success"=>false));
+                            }
+                        }
+                        else
+                        {
+                            echo json_encode(array("mensaje"=>"La contraseña actual no coincide con el usuario","success"=>false));
+                        }
+                    }
+                }
             }
         break;
     }

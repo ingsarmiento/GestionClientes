@@ -10,53 +10,54 @@
     <title>Loging de Acceso a Gestion de clientes</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../assets/css/signin.css" rel="stylesheet">
+    <link href="assets/css/signin.css" rel="stylesheet">
   </head>
+  <body class="">
 
-  <body class="text-center">
-    <form class="form-signin">
-      <img class="mb-4" src="/assets/img/logo.jpg" alt="" width='300' heigth='300'>
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Recordar Usuario
-        </label>
+    <div class="container">
+      <div class="row col-sm-12">
+        <div class="col-sm-6 offset-3 border border-info bg-info">
+          <form class="px-4 py-3 text-center" action='libs/login_management.php' Method='POST'>
+            <fieldset>
+              <img class="mb-2 col-sm-10" src="/assets/img/logo.jpg" alt="">
+              <h1 class="h3 mb-3 font-weight-normal">Iniciar Sesión</h1>
+              <div class="form-group">
+                <label for="inputEmail" class="sr-only">Email</label>
+                <div class="col-sm-10 offset-1">
+                  <input type="email" id="inputEmail" name="email" class="form-control" placeholder="example@email.com" required autofocus>
+                </div>
+                
+              </div>
+            
+              <div class="form-group">
+                <label for="inputPassword" class="sr-only">Contraseña</label>
+                <div class="col-sm-10 offset-1">
+                  <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+                </div>
+              </div>
+            
+              <!--div class="checkbox mb-3">
+                <label>
+                  <input type="checkbox" value="remember-me"> Recordar Usuario
+                </label>
+              </div-->
+              <div class="col-sm-3 offset-8">
+                <button class="btn btn-lg btn-primary btn-block" id="btnLogin">Entrar</button>
+              </div>
+            </fieldset>
+          </form>
+
+        </div>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit" id='btnLogin'>Entrar</button>
-    </form>
+    </div>
+    
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
   </body>
 </html>
-
-<script>
-
-  $('#btnLogin').click(
-
-    function()
-    {
-      $.post('/libs/login_management.php?action=login&email='+$('#inputEmail').text()+'&password='+$('#inputPassword').text(),
-        function(response)
-        {
-          if(response)
-          {
-            if(response == 'autorizado')
-            {
-              <?php
-                session_start();
-                header("location:http://localhost:8080");
-              ?>
-            }
-          }
-        }
-      );
-    }
-
-  );
-
-</script>

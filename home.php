@@ -8,13 +8,16 @@ include('libs/header.php');
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="container">
-          <h1 class="display-3">Bienvenido <?php //if(isset($_SESSION)) echo $_SESSION['nombre']; ?></h1>
           
           <?php
-
-            /*if(isset($_SESSION) && $_SESSION['loggedin'])
+            if(isset($_SESSION))
             {  
-              if($_SESSION['admin'])
+              if(isset($_SESSION['nombre']))
+              {
+                echo '<h1 class="display-3">Bienvenido '.$_SESSION['nombre'].'</h1>';
+              }
+              
+              if(isset($_SESSION['admin']) && $_SESSION['admin'])
               {
                   echo '<p>Este es el panel de control que te permitirá gestionar clientes y usuarios</p>';
               }
@@ -23,13 +26,13 @@ include('libs/header.php');
                   echo '<p>Este es el panel de control que te permitirá gestionar clientes</p>';
               }
 
-              echo '<p><a class="btn btn-primary btn-lg" href="../views/logout.php" role="button"> Salir </a></p>';
+              echo '<p><a class="btn btn-primary btn-lg" href="/logout" role="button"> Salir </a></p>';
 
             }
             else
             {
-              echo '<p><a class="btn btn-primary btn-lg" href="../views/login.php" role="button"> Iniciar sessión </a></p>';
-            }*/
+              echo '<p><a class="btn btn-primary btn-lg" href="/login" role="button"> Iniciar sessión </a></p>';
+            }
           ?>
           
         </div>

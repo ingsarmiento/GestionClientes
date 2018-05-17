@@ -8,10 +8,9 @@ include('libs/header.php');
             <p id="message" ></p>
         </div>
         
-
         <div class="card-body">
             <h5 class="card-title">Nuevo Cliente</h5>
-            <form id="saveUserForm" action="" method="POST">
+            <form id="saveClientForm">
       
                 <div class="form-group row">
                     <label for="inputDni" class="col-sm-2 col-form-label">Dni</label>
@@ -128,6 +127,7 @@ include('libs/footer.php');
                     notification.addClass("alert alert-danger");
                 }
                 mensaje.html(resultado.mensaje); 
+                document.getElementById('#saveClientForm').reset();
             }
         );
     });

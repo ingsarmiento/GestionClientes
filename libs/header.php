@@ -1,18 +1,4 @@
-    <?php
-    /*session_start();
-    if(isset($_SESSION)){
-      $now = time();
-      if($now = $_SESSION['expire'])
-      {
-        session_unset();
-        session_destroy();
-        header("Localhost:http://localhost:8080/login");
-      }
-    }*/
-    ?>
-    
-<!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -37,11 +23,20 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       
-      <?php 
+      <?php
         session_start();
         if(isset($_SESSION))
         {
           include('nav_elements.php');
+
+           $now = time();
+          if($now = $_SESSION["expire"])
+          {
+            //session_unset();
+            //session_destroy();
+            header("Localhost:http://localhost:8080/login");
+          }
         }
       ?>
+      
     </nav>

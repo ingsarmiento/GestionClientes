@@ -14,21 +14,23 @@ if(isset($_POST))
 
     //Verificando si el usuario existe en la base de datos.
    $user = json_decode($userModel->getrow("Select * from usuarios where email=? ",$email));
+   
     //Verificando si el usuario introdujo la contraseña correcta.
     if($user != null && $password == $user->password)
     {
         session_start();
-        $_SESSION['username'] = $user->username;
-        $_SESSION['nombre'] = $user->nombre;
-        $_SESSION['admin'] = $user->admin;
-        $_SESSION['loggedin'] = true;
-
-        echo 'autorizado';
+        $start = time() + 60000;
+        $expire = $start + 60000;
+        $_SESSION = Array("username" => $user->username, "nombre" => $user->nombre, "admin" =>$user->admin,
+                           "loggedin" => true, "start" => $start, "expire" => $expire);
+        header("Location:http://localhost:8080");
     }
     else
     {
-        $response = Array("data"=>"Sin resultado", "message"=>"El usuario o la contraseña no son validos");
-        echo json_encode($response);
+        session_start();
+        //session_unset();
+        //session_destroy();
+        echo "El usuario o la contraseña no son validos";
     }
 }
 ?>

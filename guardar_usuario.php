@@ -11,7 +11,7 @@ include('libs/header.php');
 
         <div class="card-body">
             <h5 class="card-title">Nuevo Usuario</h5>
-            <form id="saveUserForm" action="" method="POST">
+            <form id="saveUserForm">
                 <div class="form-group row">
                     <label for="inputUsername" class="col-sm-2 col-form-label">Usuario</label>
                     <div class="col-sm-10">
@@ -161,6 +161,7 @@ include('libs/footer.php');
                 notification.addClass("alert alert-danger");
             }
             mensaje.html(resultado.mensaje); 
+            document.getElementById('#saveUserForm').reset();
         });
     });
 </script>
