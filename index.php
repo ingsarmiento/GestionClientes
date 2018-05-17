@@ -10,24 +10,31 @@
     switch($request_uri[0])
     {
         case '/':
-            header("Location:home.php");
+              if(isset($_SESSION) && $_SESSION['loggedin'])
+              {
+                header("Location:http://localhost:8181/home.php");
+              }
+              else
+              {
+                header("Location:http://localhost:8181/login.php");
+              }
             break;
 
         case '/login':
-            header("Location:login.php");
+            header("Location:http://localhost:8181/login.php");
             break;
         case '/logout':
-            header("Location:logout.php");
+            header("Location:http://localhost:8181/logout.php");
             break;
 
         case '/usuarios':
             
             if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin']){
-                header("Location:http://localhost:8080/listar_usuarios.php");
+                header("Location:http://localhost:8181/listar_usuarios.php");
             }
             else
             {
-                header("Location:http://localhost:8080/access_denied.php");
+                header("Location:http://localhost:8181/access_denied.php");
             }
             break;
 
@@ -35,11 +42,11 @@
             
             if(isset($_SESSION) && $_SESSION['loggedin'] && $_SESSION['admin'])
             {
-                header("Location:http://localhost:8080/guardar_usuario.php");
+                header("Location:http://localhost:8181/guardar_usuario.php");
             }
             else
             {
-                header("Location:http://localhost:8080/access_denied.php");
+                header("Location:http://localhost:8181/access_denied.php");
             }
             break;
 
@@ -47,33 +54,33 @@
            
             if(isset($_SESSION) && $_SESSION['loggedin'])
             {
-                header("Location:http://localhost:8080/change_password.php");
+                header("Location:http://localhost:8181/change_password.php");
             }
             else
             {
-                header("Location:http://localhost:8080/access_denied.php");
+                header("Location:http://localhost:8181/access_denied.php");
             }
             break;
 
         case '/clientes':
             if(isset($_SESSION) && $_SESSION['loggedin'])
             {
-                header("Location:http://localhost:8080/listar_clientes.php");
+                header("Location:http://localhost:8181/listar_clientes.php");
             }
             else
             {
-                header("Location:http://localhost:8080/access_denied.php");
+                header("Location:http://localhost:8181/access_denied.php");
             }
             break;
 
         case '/clientes/guardar':
             if(isset($_SESSION) && $_SESSION['loggedin'])
             {
-                header("Location:http://localhost:8080/guardar_cliente.php");
+                header("Location:http://localhost:8181/guardar_cliente.php");
             }
             else
             {
-                header("Location:http://localhost:8080/access_denied.php");
+                header("Location:http://localhost:8181/access_denied.php");
             }
             break;
 

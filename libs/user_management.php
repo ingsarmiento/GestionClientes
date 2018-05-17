@@ -147,16 +147,15 @@
                 if($resultset != null && $resultset)
                 {
                     $resultObject = json_decode($resultset);
-                    $id = $resultObject->id;
                     $password = $resultObject->password;
                     if($password == $currentPassword)
                     {
                         if($newPassword == $confirmPassword)
                         {
-                            $userModel->setId($id);
+                            $userModel->username = $username;
                             $userModel->password = $newPassword;
-                            $modificado = $userModel->modificar();
-                            if(is_null($modificado) && $modificado)
+                            $modificado = $userModel->cambiarPassword();
+                            if(!is_null($modificado) && $modificado)
                             { 
                                 echo json_encode(array("mensaje"=>"La contraseña ha sido cambiada con exito!","success"=>$modificado));
                             }

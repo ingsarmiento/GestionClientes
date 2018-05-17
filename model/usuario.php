@@ -40,6 +40,16 @@ class Usuario extends Database
         return $this->update($sql,$params);
     }
 
+    /**
+     * Este metodo efectua la actualizacion de la contraseña del usuario.
+     */
+    public function cambiarPassword()
+    {
+        $params = array($this->password, $this->username);
+        $sql = "update usuarios set password=? where username=?";
+        return $this->update($sql, $params);
+    }
+
     public function borrar()
     {
         return $this->delete($this->getId());

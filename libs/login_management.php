@@ -23,7 +23,7 @@ if(isset($_POST))
         $expire = $start + 60000;
         $_SESSION = Array("username" => $user->username, "nombre" => $user->nombre, "admin" =>$user->admin,
                            "loggedin" => true, "start" => $start, "expire" => $expire);
-        header("Location:http://localhost:8080");
+        header("Location:http://localhost:8181/");
     }
     else
     {
