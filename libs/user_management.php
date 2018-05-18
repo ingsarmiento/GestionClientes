@@ -4,6 +4,19 @@
     $userModel = new Usuario();
     $filter = "";
 
+    //Obteniendo lista de usuarios y emails para validación.
+    if(isset($_POST))
+    {
+        if($_REQUEST['action'] == 'getUserAndEmailList')
+        {
+            $usersList = $userModel->getRows("Select username, email from usuarios");
+            if(!is_null($usersList))
+            {
+                echo $usersList;
+            }  
+        }
+    }
+    
     if(isset($_REQUEST['value']))
     {
         $filter = $_REQUEST['value'];

@@ -4,6 +4,19 @@
     $clientModel = new Cliente();
     $filter = "";
 
+    //Obteniendo lista de emails para validación.
+    if(isset($_POST))
+    {
+        if($_REQUEST['action'] == 'getEmailList')
+        {
+            $usersList = $userModel->getRows("Select email from clientes");
+            if(!is_null($usersList))
+            {
+                echo $usersList;
+            }  
+        }
+    }
+
     if(isset($_REQUEST['value']))
     {
         $filter = $_REQUEST['value'];

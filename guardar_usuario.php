@@ -15,7 +15,7 @@ include('libs/header.php');
                 <div class="form-group row">
                     <label for="inputUsername" class="col-sm-2 col-form-label">Usuario</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Usuario">
+                        <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Usuario" onchange="checkUsername()">
                     </div>
                 </div>
                     
@@ -110,7 +110,7 @@ include('libs/header.php');
                 <button type="submit" class="btn btn-primary" id="saveButton">Guardar</button>
             </div>
         </div> 
-        
+        <input type="hidden" id="listadoUsuarios">
 </div>
 
 <?php
@@ -118,10 +118,74 @@ include('libs/footer.php');
 ?>
 
 <script>
+
+    $(document).ready(function()
+    {
+        cargarListadoUsuariosEmails();
+    });
+
+    function cargarListadoUsuariosEmails()
+    {
+        $.post("/libs/user_management.php?action=getUserAndEmailList", 
+            function(response)
+            {
+                if(response)
+                {
+                    $("#listadoUsuarios").val(response);
+                }   
+            }
+        );
+    }
+
+    function getUsernameFromList(val)
+    {
+        data = JSON.parse($("#listadoUsuarios").val());
+        user = data.find(function(data)
+        {
+            if(data.username === val)
+            {
+                return data;
+            }
+            return "";
+        });
+        return user.username;
+    }
+
+    function getEmailFromList(val)
+    {
+        data = JSON.parse($("#listadoUsuarios").val());
+        user = data.find(function(data)
+        {
+            if(data.email === val)
+            {
+                return data;
+            }
+            return "";
+        });
+        return user.email;
+    }
+
+    function checkUsername()
+    {
+        username = $("#inputUsername").val();
+        if(username == getUsernameFromList(username))
+        {
+             //Poner mensaje de alerta de duplicado.
+        }
+    }
+
+    function checkEmail()
+    {
+        email =$("#inputEmail").val();
+        if(email == getUsernameFromList(email))
+        {
+             //Poner mensaje de alerta de duplicado.
+        }
+    }
+    
     //Guardar Usuario
     $("#saveButton").click(function()
     {
-
         var username = $("#inputUsername").val();
         var password = $("#inputPassword").val();
         var dni = $("#inputDni").val();

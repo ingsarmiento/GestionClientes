@@ -86,7 +86,7 @@ include('libs/header.php');
                 <button type="submit" class="btn btn-primary" id="saveButton">Guardar</button>
             </div>
         </div> 
-        
+        <input type="hidden" id="listadoEmailsClientes">
 </div>
 
 <?php
@@ -94,6 +94,49 @@ include('libs/footer.php');
 ?>
 
 <script>
+
+    $(document).ready(function()
+    {
+        cargarListadoEmailsClientes();
+    });
+
+    //Esta funcion carga un listado de todos los emails de los clientes desde la base de datos.
+    function cargarListadoEmailsClientes()
+    {
+        $.post("/libs/client_management.php?action=getEmailList", 
+            function(response)
+            {
+                if(response)
+                {
+                    $("#listadoEmailsClientes").val(response);
+                }   
+            }
+        );
+    }
+
+    //Devuelve un email del listado de Emails de Clientes
+    function getEmailFromList(val)
+    {
+        data = JSON.parse($("#listadoEmailsClientes").val());
+        client = data.find(function(data)
+        {
+            if(data.email === val)
+            {
+                return data;
+            }
+            return "";
+        });
+        return client.email;
+    }
+
+    function checkEmail()
+    {
+        email =$("#inputEmail").val();
+        if(email == getUsernameFromList(email))
+        {
+            //Poner mensaje de alerta de duplicado.
+        }
+    }
 
     //Guardar Cliente
     $("#saveButton").click(function()
