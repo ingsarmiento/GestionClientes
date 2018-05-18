@@ -66,6 +66,7 @@
                 $userModel->poblacion = $_REQUEST["poblacion"];
                 $userModel->codigo_postal = $_REQUEST["codigo_postal"];
                 $userModel->admin = $_REQUEST["admin"];
+                //$userModel->created_at = date("yyyy-mm-dd H:i:s",$_REQUEST["created_at"]+" "+date("H:i:s",time()));
                 $guardado = $userModel->guardar();
                 if($guardado != null && $guardado)
                 { 

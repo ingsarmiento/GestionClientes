@@ -141,13 +141,14 @@ include('libs/footer.php');
             admin = 1;
         }
         
-
+        
         $.post("/libs/user_management.php?action=saveUser&username="+username+"&password="+password
         +"&dni="+dni+"&nombre="+nombre+"&apellido="+apellido+"&direccion="+direccion+"&provincia="+provincia
         +"&poblacion="+poblacion+"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email
-        +"&admin="+admin, function(response)
+        +"&admin="+admin+"&created_at="+$("#inputDate").val(), 
+        function(response)
         {
-            console.log(response);
+            
             var mensaje = $("#message");
             var notification = $("#notification");
             var resultado = JSON.parse(response);
@@ -161,7 +162,7 @@ include('libs/footer.php');
                 notification.addClass("alert alert-danger");
             }
             mensaje.html(resultado.mensaje); 
-            document.getElementById('#saveUserForm').reset();
+            //document.getElementById('#saveUserForm').reset();
         });
     });
 </script>

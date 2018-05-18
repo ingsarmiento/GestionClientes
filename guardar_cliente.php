@@ -111,7 +111,7 @@ include('libs/footer.php');
 
         $.post("/libs/client_management.php?action=saveClient"+"&dni="+dni+"&nombre="+nombre
         +"&apellido="+apellido+"&direccion="+direccion+"&provincia="+provincia+"&poblacion="+poblacion
-        +"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email,
+        +"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email+"&created_at="+$("#inputDate").val(),
             function(response)
             {
                 var mensaje = $("#message");
@@ -127,7 +127,7 @@ include('libs/footer.php');
                     notification.addClass("alert alert-danger");
                 }
                 mensaje.html(resultado.mensaje); 
-                document.getElementById('#saveClientForm').reset();
+                //document.getElementById('#saveClientForm').reset();
             }
         );
     });

@@ -66,6 +66,7 @@
                 $clientModel->provincia = $_REQUEST["provincia"];
                 $clientModel->poblacion = $_REQUEST["poblacion"];
                 $clientModel->codigo_postal = $_REQUEST["codigo_postal"];
+                //$clientModel->created_at = $_REQUEST["created_at"];
                 $guardado = $clientModel->guardar();
                 if($guardado != null && $guardado)
                 { 
