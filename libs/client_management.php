@@ -20,7 +20,7 @@
             $resultset = null;
             if($_REQUEST['filter'] == "0")
             {
-                $resultset = $clientModel->getRows("Select * from clientes order by {$order}");
+                $resultset = $clientModel->getRows("Select * from clientes order by {$order} limit 100");
             }
             if($_REQUEST['filter'] == "1" && $filter != "") 
             {
@@ -28,11 +28,11 @@
             }
             if($_REQUEST['filter'] == "2" && $filter != "")
             {
-                $resultset = $clientModel->getRows("Select * from clientes where nombre like ? order by {$order}","%{$filter}%");
+                $resultset = $clientModel->getRows("Select * from clientes where nombre like ? order by {$order} limit 100","%{$filter}%");
             }
             if($_REQUEST['filter'] == "3" && $filter != "")
             {
-                $resultset = $clientModel->getRows("Select * from clientes where apellido like ? order by {$order}","%{$filter}%");
+                $resultset = $clientModel->getRows("Select * from clientes where apellido like ? order by {$order} limit 100","%{$filter}%");
             }
             
             if($resultset != null)
@@ -66,7 +66,7 @@
                 $clientModel->provincia = $_REQUEST["provincia"];
                 $clientModel->poblacion = $_REQUEST["poblacion"];
                 $clientModel->codigo_postal = $_REQUEST["codigo_postal"];
-                //$clientModel->created_at = $_REQUEST["created_at"];
+                $clientModel->created_at = $_REQUEST["created_at"];
                 $guardado = $clientModel->guardar();
                 if($guardado != null && $guardado)
                 { 

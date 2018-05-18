@@ -135,17 +135,17 @@ include('libs/footer.php');
         var telefono = $("#inputTelefono").val();
         var email = $("#inputEmail").val();
         var admin = 0; 
+        var fechaAlta = $("#inputDate").val()+" "+ new Date().toLocaleTimeString();
         
         if($("#inputAdmin").prop('checked'))
         {
             admin = 1;
         }
         
-        
         $.post("/libs/user_management.php?action=saveUser&username="+username+"&password="+password
         +"&dni="+dni+"&nombre="+nombre+"&apellido="+apellido+"&direccion="+direccion+"&provincia="+provincia
         +"&poblacion="+poblacion+"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email
-        +"&admin="+admin+"&created_at="+$("#inputDate").val(), 
+        +"&admin="+admin+"&created_at="+fechaAlta, 
         function(response)
         {
             
@@ -162,7 +162,7 @@ include('libs/footer.php');
                 notification.addClass("alert alert-danger");
             }
             mensaje.html(resultado.mensaje); 
-            //document.getElementById('#saveUserForm').reset();
+            $('#saveUserForm')[0].reset();
         });
     });
 </script>

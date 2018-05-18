@@ -10,5 +10,6 @@
     <script src="../assets/js/vendor/popper.min.js"></script>
     <script src="../assets/js/bootstrap.min.js"></script>
     <script src="../assets/js/jquery.twbsPagination.min.js"></script>
+    <script src"../assets/js/jquery.datetimepicker.full.min.js"=></script>
   </body>
 </html>

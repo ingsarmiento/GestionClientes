@@ -20,7 +20,7 @@
             $resultset = null;
             if($_REQUEST['filter'] == "0")
             {
-                $resultset = $userModel->getRows("Select * from usuarios order by {$order}");
+                $resultset = $userModel->getRows("Select * from usuarios order by {$order} limit 100");
             }
             if($_REQUEST['filter'] == "1" && $filter != "") 
             {
@@ -28,11 +28,11 @@
             }
             if($_REQUEST['filter'] == "2" && $filter != "")
             {
-                $resultset = $userModel->getRows("Select * from usuarios where nombre like ? order by {$order}","%{$filter}%");
+                $resultset = $userModel->getRows("Select * from usuarios where nombre like ? order by {$order} limit 100","%{$filter}%");
             }
             if($_REQUEST['filter'] == "3" && $filter != "")
             {
-                $resultset = $userModel->getRows("Select * from usuarios where apellido like ? order by {$order}","%{$filter}%");
+                $resultset = $userModel->getRows("Select * from usuarios where apellido like ? order by {$order} limit 100","%{$filter}%");
             }
 
             echo $resultset;      
@@ -66,7 +66,7 @@
                 $userModel->poblacion = $_REQUEST["poblacion"];
                 $userModel->codigo_postal = $_REQUEST["codigo_postal"];
                 $userModel->admin = $_REQUEST["admin"];
-                //$userModel->created_at = date("yyyy-mm-dd H:i:s",$_REQUEST["created_at"]+" "+date("H:i:s",time()));
+                $userModel->created_at = $_REQUEST["created_at"];
                 $guardado = $userModel->guardar();
                 if($guardado != null && $guardado)
                 { 

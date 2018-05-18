@@ -22,10 +22,10 @@ class Usuario extends Database
 
     public function guardar()
     {
-        $sql = "insert into usuarios(username, password, dni, nombre, apellido, direccion, provincia, poblacion, codigo_postal, telefono, email, admin)
-        values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "insert into usuarios(username, password, dni, nombre, apellido, direccion, provincia, poblacion, codigo_postal, telefono, email, admin,created_at)
+        values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         $params = array($this->username, $this->password, $this->dni, $this->nombre, $this->apellido, $this->direccion,
-        $this->provincia, $this->poblacion, $this->codigo_postal, $this->telefono, $this->email, $this->admin);
+        $this->provincia, $this->poblacion, $this->codigo_postal, $this->telefono, $this->email, $this->admin,$this->created_at);
         return $this->insert($sql, $params);
     }
 

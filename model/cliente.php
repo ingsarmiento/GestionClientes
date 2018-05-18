@@ -37,11 +37,11 @@ class Cliente extends Database
     public function guardar()
     {
         //Instrucción SQL
-        $sql = "insert into clientes(dni, nombre, apellido, direccion, telefono, email, provincia, poblacion, codigo_postal)
-        values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "insert into clientes(dni, nombre, apellido, direccion, telefono, email, provincia, poblacion, codigo_postal,created_at)
+        values(?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         //Obtenemos los parametros proporcionados por el usuario.
         $params = array($this->dni, $this->nombre, $this->apellido, $this->direccion,$this->telefono,
-        $this->email,$this->provincia,$this->poblacion,$this->codigo_postal);
+        $this->email,$this->provincia,$this->poblacion,$this->codigo_postal,$this->created_at);
         return $this->insert($sql, $params);
     }
     /**

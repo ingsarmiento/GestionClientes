@@ -77,12 +77,11 @@ include('libs/header.php');
 
                 <div class="form-group row">
                     <label for="inputDate" class="col-2 col-form-label">Fecha</label>
-                    <div class="col-10">
+                    <div class="col-sm-10">
                         <input class="form-control" type="date" id="inputDate">
                     </div>
                 </div>
             </form>
-            
             <div class="card_footer text-right">
                 <button type="submit" class="btn btn-primary" id="saveButton">Guardar</button>
             </div>
@@ -95,6 +94,7 @@ include('libs/footer.php');
 ?>
 
 <script>
+
     //Guardar Cliente
     $("#saveButton").click(function()
     {
@@ -108,14 +108,16 @@ include('libs/footer.php');
         var codigo_postal = $("#inputCodigo_postal").val();
         var telefono = $("#inputTelefono").val();
         var email = $("#inputEmail").val();
+        var fechaAlta = $("#inputDate").val()+" "+ new Date().toLocaleTimeString();
 
         $.post("/libs/client_management.php?action=saveClient"+"&dni="+dni+"&nombre="+nombre
         +"&apellido="+apellido+"&direccion="+direccion+"&provincia="+provincia+"&poblacion="+poblacion
-        +"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email+"&created_at="+$("#inputDate").val(),
+        +"&codigo_postal="+codigo_postal+"&telefono="+telefono+"&email="+email+"&created_at="+fechaAlta,
             function(response)
             {
                 var mensaje = $("#message");
                 var notification = $("#notification");
+            
                 var resultado = JSON.parse(response);
 
                 if(resultado.success)
@@ -127,7 +129,7 @@ include('libs/footer.php');
                     notification.addClass("alert alert-danger");
                 }
                 mensaje.html(resultado.mensaje); 
-                //document.getElementById('#saveClientForm').reset();
+                $('#saveClientForm')[0].reset();
             }
         );
     });
